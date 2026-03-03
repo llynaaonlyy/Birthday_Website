@@ -1,0 +1,783 @@
+/* ============================================================
+   BIRTHDAY RAIHAN — style.css
+   Ana × Raihan · 2025
+   ============================================================ */
+
+/* ---- FONTS ---- */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500&display=swap');
+
+/* ---- TOKENS ---- */
+:root {
+  --black:  #0a0a0a;
+  --deep:   #110e0c;
+  --cream:  #f5efe6;
+  --rose:   #c8837a;
+  --rose2:  #e8a09a;
+  --gold:   #c9a96e;
+  --gold2:  #e2c48a;
+  --muted:  #6b6057;
+  --white:  #fdfaf6;
+  --card-bg: rgba(255,255,255,0.035);
+  --card-border: rgba(255,255,255,0.07);
+}
+
+/* ---- RESET ---- */
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Cormorant Garamond', serif;
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- FILM GRAIN ---- */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9998;
+  opacity: 0.5;
+  animation: grainShift 0.4s steps(1) infinite;
+}
+@keyframes grainShift {
+  0%   { background-position: 0 0; }
+  25%  { background-position: -10% -5%; }
+  50%  { background-position: 5% 10%; }
+  75%  { background-position: -5% 5%; }
+  100% { background-position: 10% -10%; }
+}
+
+/* ---- VIGNETTE ---- */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.6) 100%);
+  pointer-events: none; z-index: 9997;
+}
+
+/* ---- APP SHELL ---- */
+#app {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  max-width: 430px; margin: 0 auto;
+}
+
+/* ---- SCENES ---- */
+.scene {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px 28px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease;
+  text-align: center;
+}
+.scene.active { opacity: 1; pointer-events: all; }
+
+.scene-scroll {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 48px 28px 88px;
+  text-align: center;
+  scrollbar-width: none;
+}
+.scene-scroll::-webkit-scrollbar { display: none; }
+
+/* ---- TAP ZONES ---- */
+#tap-left, #tap-right {
+  position: fixed;
+  top: 0; bottom: 68px;
+  width: 50%; z-index: 100;
+  cursor: pointer;
+}
+#tap-left  { left: 0; }
+#tap-right { right: 0; }
+
+/* ---- TAP HINT ARROWS ---- */
+.tap-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 150;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: rgba(255,255,255,0.12);
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+#arrow-left  { left: 10px; }
+#arrow-right { right: 10px; }
+
+/* ---- PROGRESS BAR ---- */
+#progress-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  max-width: 430px; margin: 0 auto;
+  padding: 14px 28px 22px;
+  z-index: 200;
+  display: flex; flex-direction: column; gap: 7px;
+  opacity: 0; transition: opacity 1.2s ease;
+  backdrop-filter: blur(4px);
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+}
+#progress-bar.visible { opacity: 1; }
+
+#progress-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px; letter-spacing: 0.22em;
+  color: var(--muted); text-transform: uppercase;
+  display: flex; justify-content: space-between;
+  align-items: center;
+}
+#scene-name { color: rgba(255,255,255,0.4); }
+
+#progress-track {
+  width: 100%; height: 2px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 99px;
+  position: relative; overflow: visible;
+}
+#progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--rose), var(--gold));
+  border-radius: 99px;
+  transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+  box-shadow: 0 0 8px rgba(201,169,110,0.5);
+}
+#progress-fill::after {
+  content: '';
+  position: absolute; right: -4px; top: 50%;
+  transform: translateY(-50%);
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold2);
+  box-shadow: 0 0 10px var(--gold);
+}
+
+/* ---- FLASH TRANSITION ---- */
+#flash {
+  position: fixed; inset: 0;
+  background: white; opacity: 0;
+  pointer-events: none; z-index: 9996;
+  transition: opacity 0.08s;
+}
+#flash.on { opacity: 0.15; }
+
+/* ============================================================
+   SCENE 0 — PRE
+   ============================================================ */
+#scene-pre { cursor: pointer; }
+
+.pre-bg-particles {
+  position: absolute; inset: 0;
+  overflow: hidden; pointer-events: none;
+}
+
+.pre-particle {
+  position: absolute;
+  width: 1px; height: 1px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: particleDrift linear infinite;
+  opacity: 0;
+}
+@keyframes particleDrift {
+  0%   { transform: translateY(110vh) scale(0); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+}
+
+.pre-logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 11px; letter-spacing: 0.6em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: fadeInUp 1s ease forwards 0.5s;
+}
+
+#scene-pre .tap-hint {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px; letter-spacing: 0.06em;
+  color: var(--cream);
+  line-height: 1.9;
+  opacity: 0;
+  animation: breathe 3.5s ease-in-out infinite;
+  animation-delay: 1.2s;
+  animation-fill-mode: forwards;
+}
+
+#scene-pre .sub {
+  font-size: 11px; letter-spacing: 0.35em;
+  color: var(--muted); margin-top: 20px;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeInUp 1s ease forwards 2.2s;
+}
+
+.tap-ripple {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,169,110,0.3);
+  margin: 28px auto 0;
+  animation: ripplePulse 2.5s ease-in-out infinite;
+  animation-delay: 2s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+.tap-ripple::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,169,110,0.2);
+  animation: ripplePulse 2.5s ease-in-out infinite 0.3s;
+}
+@keyframes ripplePulse {
+  0%,100% { transform: scale(0.95); opacity: 0.3; }
+  50%      { transform: scale(1.1);  opacity: 0.8; }
+}
+
+/* ============================================================
+   SCENE 1 — COUNTDOWN
+   ============================================================ */
+.countdown-wrap {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0;
+}
+
+.countdown-ring {
+  position: relative;
+  width: 200px; height: 200px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+}
+.countdown-ring svg {
+  position: absolute; inset: 0;
+  transform: rotate(-90deg);
+}
+.countdown-ring circle {
+  fill: none;
+  stroke: rgba(201,169,110,0.15);
+  stroke-width: 1;
+}
+.countdown-ring circle.progress {
+  stroke: var(--gold);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-dasharray: 565;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.85s ease;
+  filter: drop-shadow(0 0 6px rgba(201,169,110,0.6));
+}
+
+#countdown-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 110px; color: var(--white);
+  line-height: 1;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+  text-shadow: 0 0 40px rgba(255,255,255,0.15);
+}
+
+.birthday-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 34px; color: var(--rose);
+  line-height: 1.4;
+  opacity: 0; animation-fill-mode: forwards;
+  text-shadow: 0 2px 20px rgba(200,131,122,0.4);
+}
+.birthday-sub {
+  font-size: 12px; letter-spacing: 0.35em;
+  color: var(--gold); margin-top: 14px;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  opacity: 0; animation-fill-mode: forwards;
+}
+.show-birthday .birthday-title { animation: zoomIn 0.9s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+.show-birthday .birthday-sub   { animation: fadeInUp 1s ease forwards 0.5s; }
+
+/* CONFETTI */
+.confetti-piece {
+  position: fixed;
+  border-radius: 2px;
+  animation: confettiFall ease-in forwards;
+  pointer-events: none; z-index: 500;
+}
+@keyframes confettiFall {
+  0%   { transform: translateY(-20px) rotate(0deg) scaleX(1); opacity: 1; }
+  50%  { transform: translateY(50vh) rotate(360deg) scaleX(-1); opacity: 0.8; }
+  100% { transform: translateY(110vh) rotate(720deg) scaleX(1); opacity: 0; }
+}
+
+/* ============================================================
+   SECTION LABELS (shared)
+   ============================================================ */
+.section-label {
+  font-size: 10px; letter-spacing: 0.45em;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeInUp 0.7s ease forwards 0.2s;
+  animation-fill-mode: forwards;
+}
+.label-gold { color: var(--gold); }
+.label-rose { color: var(--rose); }
+.label-muted{ color: var(--muted); }
+
+/* ============================================================
+   SCENE 2 — MASA KECIL
+   ============================================================ */
+.age-badge {
+  font-family: 'DM Serif Display', serif;
+  font-size: 52px; color: var(--gold);
+  margin-bottom: 10px;
+  opacity: 0; animation-fill-mode: forwards;
+  text-shadow: 0 0 30px rgba(201,169,110,0.4);
+}
+.age-badge.visible { animation: zoomIn 0.7s ease forwards; }
+
+.age-label {
+  font-size: 10px; letter-spacing: 0.5em;
+  color: var(--muted); font-family: 'Inter', sans-serif;
+  text-transform: uppercase; margin-bottom: 24px;
+  opacity: 0;
+}
+.age-label.visible { animation: fadeInUp 0.6s ease forwards 0.3s; animation-fill-mode: forwards; }
+
+.photo-stack {
+  position: relative; width: 100%; height: 310px;
+  margin-bottom: 28px;
+}
+.childhood-photo {
+  position: absolute; inset: 0;
+  background: #1a1618;
+  border-radius: 6px;
+  overflow: hidden; opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 0.7s ease, transform 7s ease;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+.childhood-photo::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%);
+  pointer-events: none;
+}
+.childhood-photo.visible { opacity: 1; transform: scale(1); }
+.childhood-photo img { width: 100%; height: 100%; object-fit: cover; }
+.photo-placeholder {
+  font-size: 38px; color: var(--muted);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.photo-placeholder span {
+  font-size: 11px; font-family: 'Inter', sans-serif;
+  color: var(--muted); letter-spacing: 0.12em;
+}
+
+.s2-caption {
+  font-size: 16px; line-height: 1.9;
+  color: var(--cream); font-style: italic;
+  opacity: 0; animation-fill-mode: forwards;
+}
+.s2-caption.visible { animation: fadeInUp 1s ease forwards; }
+
+/* ============================================================
+   SCENE 3 — TYPEWRITER
+   ============================================================ */
+.typewriter-container {
+  width: 100%; text-align: left;
+  padding: 4px 0;
+}
+.tw-line {
+  font-size: 16px; line-height: 2.1;
+  color: var(--cream); min-height: 32px;
+  font-family: 'Cormorant Garamond', serif;
+}
+.tw-line.date {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px; color: var(--rose);
+  line-height: 1.5; margin-bottom: 6px;
+}
+.tw-line.highlight { color: var(--gold2); font-style: italic; font-size: 17px; }
+.tw-line.small     { font-size: 14px; color: var(--muted); }
+
+.cursor {
+  display: inline-block; width: 2px; height: 0.9em;
+  background: var(--rose); margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 0.65s steps(2) infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ============================================================
+   SCENE 4 — FIRST DATE
+   ============================================================ */
+.intro-quote {
+  font-family: 'DM Serif Display', serif;
+  font-size: 21px; font-style: italic;
+  color: var(--cream); margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.first-date-photo {
+  width: 100%; height: 270px;
+  background: #1a1618;
+  border-radius: 6px; overflow: hidden;
+  margin-bottom: 22px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.first-date-photo::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.5) 100%);
+  pointer-events: none;
+}
+.first-date-photo img { width: 100%; height: 100%; object-fit: cover; }
+.first-date-photo .placeholder {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--muted); font-size: 36px; z-index: 1;
+}
+.first-date-photo .placeholder span {
+  font-size: 11px; font-family: 'Inter', sans-serif;
+  color: var(--muted); letter-spacing: 0.1em;
+}
+
+.s4-story {
+  font-size: 15px; line-height: 1.95;
+  color: var(--cream); text-align: left;
+  margin-bottom: 20px; font-style: italic;
+}
+
+.date-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--rose), var(--rose2));
+  color: var(--white); padding: 10px 24px;
+  border-radius: 2px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px; letter-spacing: 0.22em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 20px rgba(200,131,122,0.35);
+}
+
+/* ============================================================
+   SCENE 5 — SLIDER
+   ============================================================ */
+#slider-wrap {
+  width: 100%; overflow: hidden;
+  border-radius: 6px;
+  position: relative; height: 340px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+#slider-wrap::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.5) 100%);
+  pointer-events: none; z-index: 1;
+}
+#slider-track {
+  display: flex; height: 100%;
+  transition: transform 0.75s cubic-bezier(0.77,0,0.18,1);
+}
+.slide-item {
+  min-width: 100%; height: 100%;
+  background: #1a1618;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 8px;
+}
+.slide-item img { width: 100%; height: 100%; object-fit: cover; }
+.slide-item .ph { font-size: 36px; color: var(--muted); }
+.slide-item .ph-label {
+  font-size: 11px; font-family: 'Inter', sans-serif;
+  color: var(--muted); letter-spacing: 0.1em;
+}
+
+#slider-dots { display: flex; gap: 7px; margin-top: 18px; justify-content: center; }
+.dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  transition: all 0.35s ease;
+}
+.dot.active {
+  background: var(--gold);
+  transform: scale(1.6);
+  box-shadow: 0 0 8px rgba(201,169,110,0.5);
+}
+
+.slider-caption-text {
+  margin-top: 18px; font-size: 14px;
+  color: var(--muted); font-style: italic;
+  letter-spacing: 0.04em; min-height: 22px;
+  transition: opacity 0.4s ease;
+}
+
+/* ============================================================
+   SCENE 6 — JOKES
+   ============================================================ */
+.joke-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px; padding: 20px 22px;
+  margin-bottom: 14px; width: 100%;
+  transform: translateY(24px) scale(0.97);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.34,1.3,0.64,1);
+  text-align: left;
+  backdrop-filter: blur(4px);
+}
+.joke-card.pop { transform: translateY(0) scale(1); opacity: 1; }
+.joke-card:hover { border-color: rgba(201,169,110,0.2); }
+
+.joke-emoji { font-size: 26px; margin-bottom: 10px; display: block; }
+.joke-text  { font-size: 15px; line-height: 1.75; color: var(--cream); }
+.joke-tag {
+  font-size: 10px; letter-spacing: 0.22em;
+  color: var(--muted); text-transform: uppercase;
+  font-family: 'Inter', sans-serif; margin-top: 10px;
+  display: block;
+}
+
+/* ============================================================
+   SCENE 7 — VIDEO UCAPAN
+   ============================================================ */
+.pre-video-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: 19px; font-style: italic;
+  color: var(--cream); line-height: 1.8;
+  margin-bottom: 28px;
+  opacity: 0;
+}
+.pre-video-text.visible { animation: fadeInUp 1s ease forwards; animation-fill-mode: forwards; }
+
+#video-wrap {
+  width: 100%; border-radius: 6px;
+  overflow: hidden; background: #111;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+#video-wrap video {
+  width: 100%; display: block;
+  max-height: 60vh; object-fit: contain;
+}
+
+.video-placeholder {
+  width: 100%; height: 280px;
+  background: #111; border-radius: 6px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px; color: var(--muted);
+  border: 1px dashed rgba(255,255,255,0.06);
+}
+.video-placeholder .v-icon { font-size: 40px; }
+.video-placeholder .v-label {
+  font-size: 11px; font-family: 'Inter', sans-serif;
+  letter-spacing: 0.18em; text-transform: uppercase;
+}
+
+.video-label {
+  font-size: 11px; letter-spacing: 0.3em;
+  color: var(--muted); text-transform: uppercase;
+  font-family: 'Inter', sans-serif; margin-top: 14px;
+}
+
+/* ============================================================
+   SCENE 8 — ENDING
+   ============================================================ */
+.ending-photo {
+  width: 100%; height: 260px;
+  background: #111; border-radius: 6px;
+  overflow: hidden; margin-bottom: 28px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  box-shadow: 0 0 60px rgba(200,131,122,0.15);
+}
+.ending-photo img {
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity 2.5s ease;
+}
+.ending-photo img.show { opacity: 1; }
+.ending-photo .ph {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--muted); font-size: 36px;
+}
+.ending-photo .ph span {
+  font-size: 11px; font-family: 'Inter', sans-serif; letter-spacing: 0.1em;
+}
+
+.ending-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 21px; font-style: italic;
+  color: var(--cream); line-height: 1.75;
+  opacity: 0;
+}
+.ending-title.visible {
+  animation: fadeInUp 1.6s ease forwards 0.5s;
+  animation-fill-mode: forwards;
+}
+
+.ending-sub {
+  font-size: 11px; letter-spacing: 0.35em;
+  color: var(--gold); text-transform: uppercase;
+  font-family: 'Inter', sans-serif; margin-top: 18px;
+  opacity: 0;
+}
+.ending-sub.visible {
+  animation: fadeInUp 1s ease forwards 1.8s;
+  animation-fill-mode: forwards;
+}
+
+.ending-hearts {
+  margin-top: 20px; font-size: 22px;
+  opacity: 0; letter-spacing: 0.4em;
+}
+.ending-hearts.visible {
+  animation: fadeInUp 1s ease forwards 2.5s;
+  animation-fill-mode: forwards;
+}
+
+/* ============================================================
+   SCENE 9 — BTS
+   ============================================================ */
+.bts-quote {
+  font-size: 14px; color: var(--muted);
+  margin-bottom: 22px; font-style: italic;
+  line-height: 1.8; padding: 0 8px;
+}
+
+#bts-video-wrap {
+  width: 100%; border-radius: 6px;
+  overflow: hidden; background: #111;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+#bts-video-wrap video {
+  width: 100%; display: block;
+  max-height: 52vh; object-fit: contain;
+}
+
+.bts-placeholder {
+  width: 100%; height: 240px;
+  background: #111; border-radius: 6px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px; color: var(--muted);
+  border: 1px dashed rgba(255,255,255,0.06);
+}
+.bts-placeholder .b-icon { font-size: 40px; }
+.bts-placeholder .b-label {
+  font-size: 11px; font-family: 'Inter', sans-serif;
+  letter-spacing: 0.18em; text-transform: uppercase;
+}
+
+.sign-off {
+  margin-top: 24px;
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px; font-style: italic;
+  color: var(--rose); line-height: 1.7;
+}
+.sign-name {
+  font-size: 11px; letter-spacing: 0.35em;
+  color: var(--muted); text-transform: uppercase;
+  font-family: 'Inter', sans-serif; margin-top: 8px;
+}
+
+/* ============================================================
+   MUSIC NOTES (floating)
+   ============================================================ */
+.music-note {
+  position: fixed;
+  pointer-events: none; z-index: 50;
+  animation: floatNote ease-in-out forwards;
+  font-style: normal;
+  line-height: 1;
+}
+@keyframes floatNote {
+  0%   { opacity: 0; transform: translateY(0) rotate(-10deg) scale(0.8); }
+  15%  { opacity: 0.9; }
+  80%  { opacity: 0.5; }
+  100% { opacity: 0; transform: translateY(-120px) rotate(20deg) scale(1.2); }
+}
+
+/* ============================================================
+   HEARTBEAT PULSE (random hearts appear)
+   ============================================================ */
+.floating-heart {
+  position: fixed;
+  pointer-events: none; z-index: 50;
+  animation: heartFloat ease-in-out forwards;
+  font-size: 18px; line-height: 1;
+}
+@keyframes heartFloat {
+  0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+  20%  { opacity: 0.8; transform: translateY(-20px) scale(1); }
+  100% { opacity: 0; transform: translateY(-100px) scale(0.8); }
+}
+
+/* ============================================================
+   STAR / SPARKLE particles (Scene 8 ending)
+   ============================================================ */
+.sparkle {
+  position: fixed;
+  pointer-events: none; z-index: 50;
+  animation: sparklePop ease-out forwards;
+  font-size: 12px;
+}
+@keyframes sparklePop {
+  0%   { opacity: 0; transform: scale(0) rotate(0deg); }
+  40%  { opacity: 1; transform: scale(1.4) rotate(90deg); }
+  100% { opacity: 0; transform: scale(0) rotate(180deg); }
+}
+
+/* ============================================================
+   SCENE TRANSITION NUMBER FLASH
+   ============================================================ */
+.scene-number {
+  position: fixed; top: 20px; left: 28px;
+  font-family: 'Inter', sans-serif;
+  font-size: 9px; letter-spacing: 0.4em;
+  color: rgba(255,255,255,0.12);
+  text-transform: uppercase; z-index: 201;
+  opacity: 0; transition: opacity 1s ease;
+}
+.scene-number.visible { opacity: 1; }
+
+/* ============================================================
+   SHARED ANIMATIONS
+   ============================================================ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.4); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes breathe {
+  0%,100% { opacity: 0.25; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.025); }
+}
+@keyframes shimmer {
+  0%,100% { opacity: 0.7; }
+  50%      { opacity: 1; text-shadow: 0 0 20px rgba(201,169,110,0.5); }
+}

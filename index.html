@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Happy Birthday, Raihan 🎂</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================================
+     AUDIO — Ganti src dengan path file musik kamu
+     Contoh: src="music/a-thousand-years.mp3"
+     ============================================================ -->
+<audio id="bg-music" loop preload="auto">
+  <source src="music/a-thousand-years.mp3" type="audio/mpeg">
+</audio>
+
+<!-- FILM FLASH (transition effect) -->
+<div id="flash"></div>
+
+<!-- SCENE COUNTER (top left) -->
+<div id="scene-counter" class="scene-number"></div>
+
+<!-- PROGRESS BAR (bottom) -->
+<div id="progress-bar">
+  <div id="progress-label">
+    <span id="scene-name"></span>
+    <span id="progress-pct">0%</span>
+  </div>
+  <div id="progress-track">
+    <div id="progress-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<!-- TAP HINT ARROWS -->
+<div class="tap-arrow" id="arrow-left">‹</div>
+<div class="tap-arrow" id="arrow-right">›</div>
+
+<!-- TAP ZONES -->
+<div id="tap-left"  style="display:none" onclick="prevScene()"></div>
+<div id="tap-right" style="display:none" onclick="nextScene()"></div>
+
+
+<!-- ============================================================
+     APP
+     ============================================================ -->
+<div id="app">
+
+
+  <!-- ══════════════════════════════════════════
+       SCENE 0 — PRE / OPENING
+       ══════════════════════════════════════════ -->
+  <div class="scene active" id="scene-pre">
+    <!-- Floating background particles -->
+    <div class="pre-bg-particles" id="pre-particles"></div>
+
+    <p class="pre-logo">15 Maret 2026</p>
+    <p class="tap-hint">Tap anywhere to start<br>your story…</p>
+    <p class="sub">Sebelum mulai pastikan volume HP kamu nyala</p>
+    <div class="tap-ripple"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       SCENE 1 — COUNTDOWN
+       ══════════════════════════════════════════ -->
+  <div class="scene" id="scene-1">
+    <div class="countdown-wrap">
+      <div class="countdown-ring">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="100" r="90"/>
+          <circle cx="100" cy="100" r="90" class="progress" id="countdown-ring-progress"
+            stroke-dasharray="565" stroke-dashoffset="565"/>
+        </svg>
+        <div id="countdown-num">3</div>
+      </div>
+
+      <div class="birthday-title" id="bday-title">
+        Happy Birthday,<br>Sayangggkuuu🌹
+      </div>
+      <div class="birthday-sub" id="bday-sub">
+        15 Maret 2007 · 15 Maret 2026
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       SCENE 2 — MASA KECIL
+       ══════════════════════════════════════════ -->
+  <div class="scene" id="scene-2">
+    <div class="scene-scroll">
+
+      <div class="age-badge" id="age-badge">19 tahun</div>
+      <p class="age-label" id="age-label">tahun yang luar biasa</p>
+
+      <div class="photo-stack">
+        <div class="childhood-photo" id="cp-1">
+          <div class="photo-placeholder"></div>
+          <img src="photos/masakecil-1.jpg" alt="Masa kecil Raihan">
+        </div>
+        <div class="childhood-photo" id="cp-2">
+          <div class="photo-placeholder"></div>
+          <img src="photos/masakecil-2.jpg" alt="Masa kecil Raihan">
+        </div>
+        <div class="childhood-photo" id="cp-3">
+          <div class="photo-placeholder"></div>
+          <img src="photos/masakecil-3.jpg" alt="Masa kecil Raihan">
+        </div>
+      </div>
+
+      <p class="s2-caption" id="s2-caption">
+        "Selamat ulang tahun ke-19 tahun, Sayanggg…<br>
+        Makasih udah tumbuh jadi kamu yg sekarang.<br>
+        Aku bangga sama kamu, lebih dari yang bisa aku bilang."
+      </p>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       SCENE 3 — AWAL KENAL (TYPEWRITER)
+       ══════════════════════════════════════════ -->
+  <div class="scene" id="scene-3">
+    <div class="scene-scroll">
+
+      <p class="section-label label-gold">— Mari kembali ke masa lalu —</p>
+      <div class="typewriter-container" id="tw-container">
+        <!-- Filled by script.js -->
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       SCENE 4 — FIRST DATE & JADIAN
+       ══════════════════════════════════════════ -->
+  <div class="scene" id="scene-4">
+    <div class="scene-scroll">
+
+      <p class="section-label label-rose">— Hari yang mengubah segalanya —</p>
+      <p class="intro-quote">"Hari dimana semuanya berubah…"</p>
+
+      <div class="first-date-photo">
+        <div class="placeholder"></div>
+        <img src="photos/firstdate.jpg" alt="First Date Ana & Raihan">
+      </div>
+
+      <!-- ============================================================
+           CERITA FIRST DATE — Edit teks di sini
+           ============================================================ -->
+      <p class="s4-story">
+        5 September 2025 — pergi ke pantai, mainan air, tawa yang ga ada habisnya.
+        Itu pertama kali aku sadar… kamu beda. Dan aku mau ini terus berlanjut.
+        <!-- Ganti / tambah cerita first date kamu di sini -->
+      </p>
+
+      <div class="date-badge">💍 Resmi jadian · 5 September 2025</div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       SCENE 5 — SLIDER FOTO KENANGAN
+       ══════════════════════════════════════════ -->
+  <div class="scene" id="scene-5">
+    <div class="scene-scroll">
+
+      <p class="section-label label-gold">— Kenangan kita —</p>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:26px;font-style:italic;color:var(--cream);margin-bottom:22px;">
+        Semakin hari,<br>semakin dekat 🤍
+      </h2>
+
+      <div id="slider-wrap">
+        <div id="slider-track">
+          <!-- ============================================================
+               SLIDE ITEMS — Ganti .ph / .ph-label dengan <img src="...">
+               Tambah .slide-item baru untuk lebih banyak foto
+               ============================================================ -->
+          <div class="slide-item"><div class="ph"></div> <img src="photos/kenangan-1.jpg"></div>
+          <div class="slide-item"><div class="ph"></div> <img src="photos/kenangan-2.jpg"></div>
+          <div class="slide-item"><div class="ph"></div> <img src="photos/kenangan-3.jpg"></div>
+          <div class="slide-item"><div class="ph"></div> <img src="photos/kenangan-4.jpg"></div>
+          <div class="slide-item"><div class="ph"></div> <img src="photos/kenangan-5.jpg"></div>
+        </div>
+      </div>
+
+      <div id="slider-dots"></div>
+      <p class="slider-caption-text" id="slide-caption"></p>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       SCENE 6 — HAL KECIL YANG AKU SUKA
+       ══════════════════════════════════════════ -->
+  <div class="scene" id="scene-6">
+    <div class="scene-scroll">
+
+      <p class="section-label label-rose">— yang selalu aku notice —</p>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:24px;font-style:italic;color:var(--cream);margin-bottom:8px;">
+        Hal kecil tentang kamu
+      </h2>
+      <p style="font-size:13px;color:var(--muted);font-style:italic;margin-bottom:26px;line-height:1.7;">
+        yang mungkin kamu sendiri ga sadar,<br>tapi aku selalu perhatiin.
+      </p>
+
+      <div class="joke-card">
+        <span class="joke-emoji">🤔</span>
+        <p class="joke-text">
+          Kalau lagi mikir, mukamu keliatan banget. Aku selalu bisa nebak kapan kamu lagi serius — dan setiap kali lihat ekspresi itu, aku senyum sendiri.
+        </p>
+        <span class="joke-tag">hal #1</span>
+      </div>
+
+      <div class="joke-card">
+        <span class="joke-emoji">🌸</span>
+        <p class="joke-text">
+          Kalau lagi salting, kamu malah buang muka. Padahal justru itu yang bikin kamu makin lucu — dan makin susah buat aku berhenti suka sama kamu.
+        </p>
+        <span class="joke-tag">hal #2</span>
+      </div>
+
+      <div class="joke-card">
+        <span class="joke-emoji">✨</span>
+        <p class="joke-text">
+          Style kamu tuh keren-keren. Aku ga pernah bilang langsung, tapi tiap kamu muncul dengan outfit baru, dalam hati aku selalu mikir — dia emang beda.
+        </p>
+        <span class="joke-tag">hal #3</span>
+      </div>
+
+      <div class="joke-card">
+        <span class="joke-emoji">🖤</span>
+        <p class="joke-text">
+          Rambutnya njegrak. Selalu. Dan entah kenapa justru itu salah satu hal pertama yang bikin aku notice kamu — dan sampai sekarang masih bikin aku sayang.
+        </p>
+        <span class="joke-tag">hal #4</span>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       SCENE 7 — VIDEO UCAPAN
+       ══════════════════════════════════════════ -->
+  <div class="scene" id="scene-7">
+    <div class="scene-scroll">
+
+      <p class="pre-video-text" id="pre-video-text">
+        "Aku ga jago ngomong langsung…<br>
+        tapi aku mau kamu denger ini,<br>
+        dari aku sendiri."
+      </p>
+
+      <!-- ============================================================
+           VIDEO UCAPAN ANA
+           Hapus komentar di bawah & pastikan file ada di videos/
+           ============================================================ -->
+      <div id="video-wrap">
+        <div class="video-placeholder">
+          <div class="v-icon">🎥</div>
+          <div class="v-label">Video ucapan dari Ana</div>
+        </div>
+        <!--
+        <video id="main-video" controls playsinline>
+          <source src="videos/ucapan.mp4" type="video/mp4">
+        </video>
+        -->
+      </div>
+
+      <p class="video-label">Dari Ana, dengan sepenuh hati 🤍</p>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       SCENE 8 — ENDING (CINEMATIC)
+       ══════════════════════════════════════════ -->
+  <div class="scene" id="scene-8">
+    <div class="scene-scroll">
+
+      <!-- ============================================================
+           FOTO KITA BERDUA (ending)
+           Hapus komentar & ganti src
+           ============================================================ -->
+      <div class="ending-photo">
+        <div class="ph"><br> </div>
+        <img id="ending-img" src="photos/kita-berdua.jpg" alt="Ana & Raihan"> 
+      </div>
+
+      <p class="ending-title" id="ending-title">
+        "This is not the end…<br>
+        This is just the beginning<br>
+        of our forever story."
+      </p>
+
+      <p class="ending-sub" id="ending-sub">Ana & Raihan · 2025 → ∞</p>
+      <p class="ending-hearts" id="ending-hearts">🌸 🤍 🌹</p>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       SCENE 9 — BTS
+       ══════════════════════════════════════════ -->
+  <div class="scene" id="scene-9">
+    <div class="scene-scroll">
+
+      <p class="section-label label-muted">— Behind The Story —</p>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:24px;font-style:italic;color:var(--cream);margin-bottom:10px;">
+        Ini semua cuma buat kamu
+      </h2>
+      <p class="bts-quote">
+        "Behind this story… there was someone<br>
+        who made all of this just for you."
+      </p>
+
+      <!-- ============================================================
+           VIDEO BTS
+           Hapus komentar & ganti src
+           ============================================================ -->
+      <div id="bts-video-wrap">
+        <div class="bts-placeholder">
+          <div class="b-icon">🎬</div>
+          <div class="b-label">Video BTS dari Ana</div>
+        </div>
+        <!--
+        <video controls playsinline>
+          <source src="videos/bts.mp4" type="video/mp4">
+        </video>
+        -->
+      </div>
+
+      <p class="sign-off">Happy Birthday,<br>Raihan Sayangku 🌹</p>
+      <p class="sign-name">— Ana, 15 Maret 2026 —</p>
+
+    </div>
+  </div>
+
+
+</div><!-- /app -->
+
+<script src="script.js"></script>
+</body>
+</html>
