@@ -1,5 +1,6 @@
 /* ============================================================
-   BIRTHDAY WEB APP STYLESHEET
+   BIRTHDAY RAIHAN — style.css
+   Ana × Raihan · 2025
    ============================================================ */
 
 /* ---- FONTS ---- */
@@ -831,4 +832,18 @@ video:not([paused]) ~ .play-overlay,
    ============================================================ */
 .countdown-ring {
   transition: opacity 0.4s ease;
+}
+
+/* ============================================================
+   SCENE 6 — Scroll fix (konten bisa melebihi layar)
+   ============================================================ */
+#scene-6 .scene-scroll {
+  justify-content: flex-start;
+  padding-top: 60px;
+}
+
+/* Hapus CSS custom play overlay (tidak dipakai lagi) */
+.play-overlay,
+.custom-play-btn {
+  display: none !important;
 }

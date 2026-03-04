@@ -1,5 +1,6 @@
 /* ============================================================
-    BIRTHDAY WEB APP SCRIPT
+   BIRTHDAY RAIHAN — script.js
+   Ana × Raihan · 2025
    ============================================================ */
 
 // ============================================================
@@ -88,6 +89,8 @@ function startStory() {
   document.getElementById('tap-right').style.display = 'block';
   document.getElementById('progress-bar').classList.add('visible');
   document.getElementById('scene-counter').classList.add('visible');
+
+  setupTapZoneVideoGuard();
 
   startMusicNotes();
   startFloatingHearts();
@@ -433,51 +436,34 @@ function enterVideo() {
   preText.classList.remove('visible');
   setTimeout(() => preText.classList.add('visible'), 300);
 
-  // Inject custom play button jika video ada dan belum diinjek
   const videoWrap = document.getElementById('video-wrap');
   const vid = document.getElementById('main-video');
-  if (vid && !videoWrap.querySelector('.custom-play-btn')) {
-    injectPlayButton(videoWrap, vid, false);
+  if (vid) {
+    setupVideoMusic(vid, false);
   }
 }
 
-function injectPlayButton(wrap, vid, isBTS) {
-  // Buat overlay tombol play
-  const overlay = document.createElement('div');
-  overlay.className = 'play-overlay';
-
-  const btn = document.createElement('button');
-  btn.className = 'custom-play-btn';
-  btn.innerHTML = '▶';
-  btn.setAttribute('aria-label', 'Play video');
-
-  overlay.appendChild(btn);
-  wrap.appendChild(overlay);
-
-  // Pastikan video tidak autoplay
+function setupVideoMusic(vid, isBTS) {
+  // Pastikan tidak autoplay & pakai kontrol bawaan browser
   vid.removeAttribute('autoplay');
+  vid.setAttribute('controls', '');
   vid.pause();
 
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (vid.paused) {
-      // Pause musik sebelum play
-      if (isBTS) {
-        // BTS: stop musik total (simpan posisi)
-        music.pause();
-      } else {
-        // Ucapan: fade down musik
-        fadeVol(music, music.volume, CONFIG.musicFadeOut, CONFIG.musicFadeOutMs);
-      }
-      vid.play();
-      btn.innerHTML = '⏸';
-      overlay.style.background = 'transparent';
+  // Cegah event listener dobel
+  if (vid._musicHooked) return;
+  vid._musicHooked = true;
+
+  vid.addEventListener('play', () => {
+    if (isBTS) {
+      music.pause();
     } else {
-      vid.pause();
-      btn.innerHTML = '▶';
-      overlay.style.background = 'rgba(0,0,0,0.35)';
+      fadeVol(music, music.volume, CONFIG.musicFadeOut, CONFIG.musicFadeOutMs);
+    }
+  });
+
+  vid.addEventListener('pause', () => {
+    if (!vid.ended) {
       if (isBTS) {
-        // Lanjutkan musik dari posisi terakhir
         music.play().catch(() => {});
         fadeVol(music, 0, CONFIG.musicVolume, 1800);
       } else {
@@ -486,16 +472,11 @@ function injectPlayButton(wrap, vid, isBTS) {
     }
   });
 
-  // Ketika video selesai
   vid.addEventListener('ended', () => {
-    btn.innerHTML = '▶'; // reset ke play icon
-    overlay.style.background = 'rgba(0,0,0,0.35)';
     if (isBTS) {
-      // Lanjutkan musik dari posisi terakhir
       music.play().catch(() => {});
       fadeVol(music, 0, CONFIG.musicVolume, 2000);
     } else {
-      // Fade musik kembali normal
       fadeVol(music, music.volume, CONFIG.musicVolume, 2200);
     }
   });
@@ -528,8 +509,8 @@ function enterEnding() {
 function enterBTS() {
   const btsWrap = document.getElementById('bts-video-wrap');
   const btsVid  = btsWrap ? btsWrap.querySelector('video') : null;
-  if (btsVid && !btsWrap.querySelector('.custom-play-btn')) {
-    injectPlayButton(btsWrap, btsVid, true);
+  if (btsVid) {
+    setupVideoMusic(btsVid, true);
   }
 }
 
@@ -644,8 +625,32 @@ function buildPreParticles() {
 }
 
 // ============================================================
-// FLASH TRANSITION
+// TAP ZONE — nonaktifkan saat kursor/sentuhan di atas elemen video
 // ============================================================
+function setupTapZoneVideoGuard() {
+  const tapLeft  = document.getElementById('tap-left');
+  const tapRight = document.getElementById('tap-right');
+
+  function isOverVideo(e) {
+    const touch = e.touches ? e.touches[0] : e;
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (!el) return false;
+    return el.closest('video') !== null || el.closest('#video-wrap') !== null || el.closest('#bts-video-wrap') !== null;
+  }
+
+  [tapLeft, tapRight].forEach(zone => {
+    // Intercept touchstart — block navigation se sentuh area video
+    zone.addEventListener('touchstart', (e) => {
+      if (isOverVideo(e)) { e.stopImmediatePropagation(); e.preventDefault(); }
+    }, { capture: true, passive: false });
+
+    zone.addEventListener('click', (e) => {
+      if (isOverVideo(e)) { e.stopImmediatePropagation(); }
+    }, { capture: true });
+  });
+}
+
+
 function doFlash() {
   const f = document.getElementById('flash');
   if (!f) return;
