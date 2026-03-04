@@ -1,6 +1,5 @@
 /* ============================================================
-   BIRTHDAY RAIHAN — script.js
-   Ana × Raihan · 2025
+    BIRTHDAY WEB APP SCRIPT
    ============================================================ */
 
 // ============================================================
@@ -111,9 +110,31 @@ function goToScene(n) {
 
   // Resume music volume if leaving video scene
   if (currentScene === 7 && n !== 7) {
-    fadeVol(music, music.volume, CONFIG.musicVolume, 2000);
     const vid = document.getElementById('main-video');
-    if (vid) vid.pause();
+    if (vid && !vid.paused) {
+      vid.pause();
+    }
+    // Kembalikan volume musik jika bukan BTS
+    if (music.volume < CONFIG.musicVolume) {
+      if (!music.paused) {
+        fadeVol(music, music.volume, CONFIG.musicVolume, 2000);
+      } else {
+        music.play().catch(() => {});
+        fadeVol(music, 0, CONFIG.musicVolume, 2000);
+      }
+    }
+  }
+
+  if (currentScene === 9 && n !== 9) {
+    const btsVid = document.querySelector('#bts-video-wrap video');
+    if (btsVid && !btsVid.paused) {
+      btsVid.pause();
+    }
+    // Resume musik jika sedang berhenti karena BTS
+    if (music.paused) {
+      music.play().catch(() => {});
+      fadeVol(music, 0, CONFIG.musicVolume, 2000);
+    }
   }
 
   currentScene = n;
@@ -156,7 +177,7 @@ function onEnter(n) {
     6: enterJokes,
     7: enterVideo,
     8: enterEnding,
-    9: () => {},
+    9: enterBTS,
   };
   if (fn[n]) fn[n]();
 }
@@ -165,7 +186,15 @@ function onEnter(n) {
 // SCENE 1 — COUNTDOWN
 // ============================================================
 function enterCountdown() {
-  if (countdownDone) return;
+  if (countdownDone) {
+    // Jika countdown sudah selesai, langsung tampilkan Happy Birthday (ring sudah hidden)
+    const ringEl = document.querySelector('.countdown-ring');
+    if (ringEl) { ringEl.style.display = 'none'; ringEl.style.opacity = '0'; }
+    document.getElementById('bday-title').style.display = 'block';
+    document.getElementById('bday-sub').style.display   = 'block';
+    document.getElementById('scene-1').classList.add('show-birthday');
+    return;
+  }
 
   const numEl  = document.getElementById('countdown-num');
   const titleEl = document.getElementById('bday-title');
@@ -183,6 +212,11 @@ function enterCountdown() {
   if (ring) ring.style.strokeDashoffset = '0';
 
   const tick = setInterval(() => {
+    // Vibrate saat angka 1 (countdown terakhir sebelum 0)
+    if (count === 1 && navigator.vibrate) {
+      navigator.vibrate([120, 60, 200]);
+    }
+
     // Pulse animation
     numEl.style.transform = 'scale(1.25)';
     numEl.style.opacity   = '0.5';
@@ -207,6 +241,13 @@ function enterCountdown() {
 
       numEl.style.opacity = '0';
       setTimeout(() => {
+        // Sembunyikan seluruh ring wrapper agar Happy Birthday bisa center
+        const ringEl = document.querySelector('.countdown-ring');
+        if (ringEl) {
+          ringEl.style.transition = 'opacity 0.4s ease';
+          ringEl.style.opacity    = '0';
+          setTimeout(() => { ringEl.style.display = 'none'; }, 420);
+        }
         numEl.style.display  = 'none';
         titleEl.style.display = 'block';
         subEl.style.display   = 'block';
@@ -385,21 +426,79 @@ function enterJokes() {
 }
 
 // ============================================================
-// SCENE 7 — VIDEO
+// SCENE 7 — VIDEO UCAPAN
 // ============================================================
 function enterVideo() {
   const preText = document.getElementById('pre-video-text');
   preText.classList.remove('visible');
   setTimeout(() => preText.classList.add('visible'), 300);
 
-  setTimeout(() => {
-    fadeVol(music, music.volume, CONFIG.musicFadeOut, CONFIG.musicFadeOutMs);
-  }, 1800);
-
+  // Inject custom play button jika video ada dan belum diinjek
+  const videoWrap = document.getElementById('video-wrap');
   const vid = document.getElementById('main-video');
-  if (vid) {
-    vid.onended = () => fadeVol(music, music.volume, CONFIG.musicVolume, 2200);
+  if (vid && !videoWrap.querySelector('.custom-play-btn')) {
+    injectPlayButton(videoWrap, vid, false);
   }
+}
+
+function injectPlayButton(wrap, vid, isBTS) {
+  // Buat overlay tombol play
+  const overlay = document.createElement('div');
+  overlay.className = 'play-overlay';
+
+  const btn = document.createElement('button');
+  btn.className = 'custom-play-btn';
+  btn.innerHTML = '▶';
+  btn.setAttribute('aria-label', 'Play video');
+
+  overlay.appendChild(btn);
+  wrap.appendChild(overlay);
+
+  // Pastikan video tidak autoplay
+  vid.removeAttribute('autoplay');
+  vid.pause();
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (vid.paused) {
+      // Pause musik sebelum play
+      if (isBTS) {
+        // BTS: stop musik total (simpan posisi)
+        music.pause();
+      } else {
+        // Ucapan: fade down musik
+        fadeVol(music, music.volume, CONFIG.musicFadeOut, CONFIG.musicFadeOutMs);
+      }
+      vid.play();
+      btn.innerHTML = '⏸';
+      overlay.style.background = 'transparent';
+    } else {
+      vid.pause();
+      btn.innerHTML = '▶';
+      overlay.style.background = 'rgba(0,0,0,0.35)';
+      if (isBTS) {
+        // Lanjutkan musik dari posisi terakhir
+        music.play().catch(() => {});
+        fadeVol(music, 0, CONFIG.musicVolume, 1800);
+      } else {
+        fadeVol(music, music.volume, CONFIG.musicVolume, 2000);
+      }
+    }
+  });
+
+  // Ketika video selesai
+  vid.addEventListener('ended', () => {
+    btn.innerHTML = '▶'; // reset ke play icon
+    overlay.style.background = 'rgba(0,0,0,0.35)';
+    if (isBTS) {
+      // Lanjutkan musik dari posisi terakhir
+      music.play().catch(() => {});
+      fadeVol(music, 0, CONFIG.musicVolume, 2000);
+    } else {
+      // Fade musik kembali normal
+      fadeVol(music, music.volume, CONFIG.musicVolume, 2200);
+    }
+  });
 }
 
 // ============================================================
@@ -421,6 +520,17 @@ function enterEnding() {
     if (img) setTimeout(() => img.classList.add('show'), 600);
     launchEndingSparkles();
   }, 400);
+}
+
+// ============================================================
+// SCENE 9 — BTS
+// ============================================================
+function enterBTS() {
+  const btsWrap = document.getElementById('bts-video-wrap');
+  const btsVid  = btsWrap ? btsWrap.querySelector('video') : null;
+  if (btsVid && !btsWrap.querySelector('.custom-play-btn')) {
+    injectPlayButton(btsWrap, btsVid, true);
+  }
 }
 
 function launchEndingSparkles() {

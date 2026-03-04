@@ -1,6 +1,5 @@
 /* ============================================================
-   BIRTHDAY RAIHAN — style.css
-   Ana × Raihan · 2025
+   BIRTHDAY WEB APP STYLESHEET
    ============================================================ */
 
 /* ---- FONTS ---- */
@@ -780,4 +779,56 @@ body::after {
 @keyframes shimmer {
   0%,100% { opacity: 0.7; }
   50%      { opacity: 1; text-shadow: 0 0 20px rgba(201,169,110,0.5); }
+}
+/* ============================================================
+   CUSTOM VIDEO PLAY BUTTON OVERLAY
+   ============================================================ */
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.35);
+  z-index: 10;
+  transition: background 0.3s ease;
+}
+.play-overlay:hover { background: rgba(0,0,0,0.2); }
+
+.custom-play-btn {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.85);
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 22px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: transform 0.2s ease, background 0.2s ease;
+  padding-left: 4px; /* optical centering for play icon */
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+.custom-play-btn:active {
+  transform: scale(0.92);
+  background: rgba(201,169,110,0.4);
+}
+
+/* Saat video play, overlay mengecil & transparan agar video terlihat */
+video:not([paused]) ~ .play-overlay,
+.play-overlay.playing {
+  background: transparent;
+}
+
+/* Pastikan video-wrap & bts-video-wrap punya position:relative untuk overlay */
+#video-wrap,
+#bts-video-wrap {
+  position: relative;
+}
+
+/* ============================================================
+   COUNTDOWN RING — smooth hide saat Happy Birthday muncul
+   ============================================================ */
+.countdown-ring {
+  transition: opacity 0.4s ease;
 }
