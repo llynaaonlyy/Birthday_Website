@@ -1,12 +1,7 @@
-/* ============================================================
-   BIRTHDAY RAIHAN — style.css
-   Ana × Raihan · 2025
-   ============================================================ */
-
-/* ---- FONTS ---- */
+/* FONTS */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500&display=swap');
 
-/* ---- TOKENS ---- */
+/* TOKENS */
 :root {
   --black:  #0a0a0a;
   --deep:   #110e0c;
@@ -21,7 +16,7 @@
   --card-border: rgba(255,255,255,0.07);
 }
 
-/* ---- RESET ---- */
+/* RESET */
 *, *::before, *::after {
   margin: 0; padding: 0;
   box-sizing: border-box;
@@ -38,7 +33,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ---- FILM GRAIN ---- */
+/* FILM GRAIN */
 body::before {
   content: '';
   position: fixed; inset: 0;
@@ -55,7 +50,7 @@ body::before {
   100% { background-position: 10% -10%; }
 }
 
-/* ---- VIGNETTE ---- */
+/* VIGNETTE */
 body::after {
   content: '';
   position: fixed; inset: 0;
@@ -63,7 +58,7 @@ body::after {
   pointer-events: none; z-index: 9997;
 }
 
-/* ---- APP SHELL ---- */
+/* APP SHELL */
 #app {
   position: fixed; inset: 0;
   display: flex; flex-direction: column;
@@ -71,7 +66,7 @@ body::after {
   max-width: 430px; margin: 0 auto;
 }
 
-/* ---- SCENES ---- */
+/* SCENES */
 .scene {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
@@ -96,17 +91,17 @@ body::after {
 }
 .scene-scroll::-webkit-scrollbar { display: none; }
 
-/* ---- TAP ZONES ---- */
+/* TAP ZONES — hanya di pinggir kiri/kanan, tengah bebas */
 #tap-left, #tap-right {
   position: fixed;
   top: 0; bottom: 68px;
-  width: 50%; z-index: 100;
+  width: 20%; z-index: 100;
   cursor: pointer;
 }
 #tap-left  { left: 0; }
 #tap-right { right: 0; }
 
-/* ---- TAP HINT ARROWS ---- */
+/* TAP HINT ARROWS */
 .tap-arrow {
   position: fixed;
   top: 50%;
@@ -120,10 +115,10 @@ body::after {
   pointer-events: none;
   transition: opacity 0.4s;
 }
-#arrow-left  { left: 10px; }
-#arrow-right { right: 10px; }
+#arrow-left  { left: 6px; }
+#arrow-right { right: 6px; }
 
-/* ---- PROGRESS BAR ---- */
+/* PROGRESS BAR */
 #progress-bar {
   position: fixed; bottom: 0; left: 0; right: 0;
   max-width: 430px; margin: 0 auto;
@@ -169,7 +164,7 @@ body::after {
   box-shadow: 0 0 10px var(--gold);
 }
 
-/* ---- FLASH TRANSITION ---- */
+/* FLASH TRANSITION */
 #flash {
   position: fixed; inset: 0;
   background: white; opacity: 0;
@@ -178,9 +173,7 @@ body::after {
 }
 #flash.on { opacity: 0.15; }
 
-/* ============================================================
-   SCENE 0 — PRE
-   ============================================================ */
+/* SCENE 0 — PRE */
 #scene-pre { cursor: pointer; }
 
 .pre-bg-particles {
@@ -256,9 +249,7 @@ body::after {
   50%      { transform: scale(1.1);  opacity: 0.8; }
 }
 
-/* ============================================================
-   SCENE 1 — COUNTDOWN
-   ============================================================ */
+/* SCENE 1 — COUNTDOWN */
 .countdown-wrap {
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
@@ -328,9 +319,7 @@ body::after {
   100% { transform: translateY(110vh) rotate(720deg) scaleX(1); opacity: 0; }
 }
 
-/* ============================================================
-   SECTION LABELS (shared)
-   ============================================================ */
+/* SECTION LABELS (shared) */
 .section-label {
   font-size: 10px; letter-spacing: 0.45em;
   text-transform: uppercase;
@@ -344,9 +333,7 @@ body::after {
 .label-rose { color: var(--rose); }
 .label-muted{ color: var(--muted); }
 
-/* ============================================================
-   SCENE 2 — MASA KECIL
-   ============================================================ */
+/* SCENE 2 — MASA KECIL */
 .age-badge {
   font-family: 'DM Serif Display', serif;
   font-size: 52px; color: var(--gold);
@@ -402,9 +389,7 @@ body::after {
 }
 .s2-caption.visible { animation: fadeInUp 1s ease forwards; }
 
-/* ============================================================
-   SCENE 3 — TYPEWRITER
-   ============================================================ */
+/* SCENE 3 — TYPEWRITER */
 .typewriter-container {
   width: 100%; text-align: left;
   padding: 4px 0;
@@ -430,9 +415,7 @@ body::after {
 }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-/* ============================================================
-   SCENE 4 — FIRST DATE
-   ============================================================ */
+/* SCENE 4 — FIRST DATE */
 .intro-quote {
   font-family: 'DM Serif Display', serif;
   font-size: 21px; font-style: italic;
@@ -482,9 +465,7 @@ body::after {
   box-shadow: 0 4px 20px rgba(200,131,122,0.35);
 }
 
-/* ============================================================
-   SCENE 5 — SLIDER
-   ============================================================ */
+/* SCENE 5 — SLIDER */
 #slider-wrap {
   width: 100%; overflow: hidden;
   border-radius: 6px;
@@ -533,9 +514,7 @@ body::after {
   transition: opacity 0.4s ease;
 }
 
-/* ============================================================
-   SCENE 6 — JOKES
-   ============================================================ */
+/* SCENE 6 — JOKES */
 .joke-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
@@ -559,9 +538,7 @@ body::after {
   display: block;
 }
 
-/* ============================================================
-   SCENE 7 — VIDEO UCAPAN
-   ============================================================ */
+/* SCENE 7 — VIDEO UCAPAN */
 .pre-video-text {
   font-family: 'DM Serif Display', serif;
   font-size: 19px; font-style: italic;
@@ -602,9 +579,7 @@ body::after {
   font-family: 'Inter', sans-serif; margin-top: 14px;
 }
 
-/* ============================================================
-   SCENE 8 — ENDING
-   ============================================================ */
+/* SCENE 8 — ENDING */
 .ending-photo {
   width: 100%; height: 260px;
   background: #111; border-radius: 6px;
@@ -657,9 +632,7 @@ body::after {
   animation-fill-mode: forwards;
 }
 
-/* ============================================================
-   SCENE 9 — BTS
-   ============================================================ */
+/* SCENE 9 — BTS */
 .bts-quote {
   font-size: 14px; color: var(--muted);
   margin-bottom: 22px; font-style: italic;
@@ -702,9 +675,7 @@ body::after {
   font-family: 'Inter', sans-serif; margin-top: 8px;
 }
 
-/* ============================================================
-   MUSIC NOTES (floating)
-   ============================================================ */
+/* MUSIC NOTES (floating) */
 .music-note {
   position: fixed;
   pointer-events: none; z-index: 50;
@@ -719,9 +690,7 @@ body::after {
   100% { opacity: 0; transform: translateY(-120px) rotate(20deg) scale(1.2); }
 }
 
-/* ============================================================
-   HEARTBEAT PULSE (random hearts appear)
-   ============================================================ */
+/* HEARTBEAT PULSE (random hearts appear) */
 .floating-heart {
   position: fixed;
   pointer-events: none; z-index: 50;
@@ -734,9 +703,7 @@ body::after {
   100% { opacity: 0; transform: translateY(-100px) scale(0.8); }
 }
 
-/* ============================================================
-   STAR / SPARKLE particles (Scene 8 ending)
-   ============================================================ */
+/* STAR / SPARKLE particles (Scene 8 ending) */
 .sparkle {
   position: fixed;
   pointer-events: none; z-index: 50;
@@ -749,9 +716,7 @@ body::after {
   100% { opacity: 0; transform: scale(0) rotate(180deg); }
 }
 
-/* ============================================================
-   SCENE TRANSITION NUMBER FLASH
-   ============================================================ */
+/* SCENE TRANSITION NUMBER FLASH */
 .scene-number {
   position: fixed; top: 20px; left: 28px;
   font-family: 'Inter', sans-serif;
@@ -762,9 +727,7 @@ body::after {
 }
 .scene-number.visible { opacity: 1; }
 
-/* ============================================================
-   SHARED ANIMATIONS
-   ============================================================ */
+/* SHARED ANIMATIONS */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -781,9 +744,7 @@ body::after {
   0%,100% { opacity: 0.7; }
   50%      { opacity: 1; text-shadow: 0 0 20px rgba(201,169,110,0.5); }
 }
-/* ============================================================
-   CUSTOM VIDEO PLAY BUTTON OVERLAY
-   ============================================================ */
+/* CUSTOM VIDEO PLAY BUTTON OVERLAY */
 .play-overlay {
   position: absolute;
   inset: 0;
@@ -807,7 +768,7 @@ body::after {
   cursor: pointer;
   backdrop-filter: blur(4px);
   transition: transform 0.2s ease, background 0.2s ease;
-  padding-left: 4px; /* optical centering for play icon */
+  padding-left: 4px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.5);
 }
 .custom-play-btn:active {
@@ -827,16 +788,12 @@ video:not([paused]) ~ .play-overlay,
   position: relative;
 }
 
-/* ============================================================
-   COUNTDOWN RING — smooth hide saat Happy Birthday muncul
-   ============================================================ */
+/* COUNTDOWN RING — smooth hide saat Happy Birthday muncul */
 .countdown-ring {
   transition: opacity 0.4s ease;
 }
 
-/* ============================================================
-   SCENE 6 — Scroll fix (konten bisa melebihi layar)
-   ============================================================ */
+/* SCENE 6 — Scroll fix (konten bisa melebihi layar) */
 #scene-6 .scene-scroll {
   justify-content: flex-start;
   padding-top: 60px;

@@ -3,26 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Happy Birthday, Raihan 🎂</title>
+  <title>Happy Birthday, Sayangggkuuu 🎂</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- ============================================================
-     AUDIO — Ganti src dengan path file musik kamu
-     Contoh: src="music/a-thousand-years.mp3"
-     ============================================================ -->
 <audio id="bg-music" loop preload="auto">
   <source src="music/kota_ini_tak_sama_tanpamu.mp3" type="audio/mpeg">
 </audio>
 
-<!-- FILM FLASH (transition effect) -->
-<div id="flash"></div>
 
-<!-- SCENE COUNTER (top left) -->
+<div id="flash"></div>
 <div id="scene-counter" class="scene-number"></div>
 
-<!-- PROGRESS BAR (bottom) -->
+<!-- PROGRESS BAR -->
 <div id="progress-bar">
   <div id="progress-label">
     <span id="scene-name"></span>
@@ -36,23 +30,15 @@
 <!-- TAP HINT ARROWS -->
 <div class="tap-arrow" id="arrow-left">‹</div>
 <div class="tap-arrow" id="arrow-right">›</div>
-
-<!-- TAP ZONES -->
 <div id="tap-left"  style="display:none" onclick="prevScene()"></div>
 <div id="tap-right" style="display:none" onclick="nextScene()"></div>
 
 
-<!-- ============================================================
-     APP
-     ============================================================ -->
+<!-- APP -->
 <div id="app">
 
-
-  <!-- ══════════════════════════════════════════
-       SCENE 0 — PRE / OPENING
-       ══════════════════════════════════════════ -->
+  <!-- SCENE 0 — PRE -->
   <div class="scene active" id="scene-pre">
-    <!-- Floating background particles -->
     <div class="pre-bg-particles" id="pre-particles"></div>
 
     <p class="pre-logo">15 Maret 2026</p>
@@ -62,9 +48,7 @@
   </div>
 
 
-  <!-- ══════════════════════════════════════════
-       SCENE 1 — COUNTDOWN
-       ══════════════════════════════════════════ -->
+  <!-- SCENE 1 — COUNTDOWN -->
   <div class="scene" id="scene-1">
     <div class="countdown-wrap">
       <div class="countdown-ring">
@@ -86,14 +70,12 @@
   </div>
 
 
-  <!-- ══════════════════════════════════════════
-       SCENE 2 — MASA KECIL
-       ══════════════════════════════════════════ -->
+  <!-- SCENE 2 — MASA KECIL -->
   <div class="scene" id="scene-2">
     <div class="scene-scroll">
 
       <div class="age-badge" id="age-badge">19 tahun</div>
-      <p class="age-label" id="age-label">tahun yang luar biasa</p>
+      <p class="age-label" id="age-label">dan kamu udah sampai sejauh ini</p>
 
       <div class="photo-stack">
         <div class="childhood-photo" id="cp-1">
@@ -113,63 +95,54 @@
       <p class="s2-caption" id="s2-caption">
         "Selamat ulang tahun ke-19 tahun, Sayanggg…<br>
         Makasih udah tumbuh jadi kamu yg sekarang.<br>
-        Aku bangga sama kamu, lebih dari yang bisa aku bilang."
+        Aku bangga sama kamu, selaluu 𖹭.ᐟ"
       </p>
 
     </div>
   </div>
 
 
-  <!-- ══════════════════════════════════════════
-       SCENE 3 — AWAL KENAL (TYPEWRITER)
-       ══════════════════════════════════════════ -->
+  <!-- SCENE 3 — AWAL KENAL -->
   <div class="scene" id="scene-3">
     <div class="scene-scroll">
 
-      <p class="section-label label-gold">— Mari kembali ke masa lalu —</p>
+      <p class="section-label label-gold">— Semua Bermula dari Sini —</p>
       <div class="typewriter-container" id="tw-container">
-        <!-- Filled by script.js -->
       </div>
 
     </div>
   </div>
 
 
-  <!-- ══════════════════════════════════════════
-       SCENE 4 — FIRST DATE & JADIAN
-       ══════════════════════════════════════════ -->
+  <!-- SCENE 4 — FIRST DATE & JADIAN -->
   <div class="scene" id="scene-4">
     <div class="scene-scroll">
 
-      <p class="section-label label-rose">— Hari yang mengubah segalanya —</p>
-      <p class="intro-quote">"Hari dimana semuanya berubah…"</p>
+      <p class="section-label label-rose">5 September 2025</p>
+      <p class="intro-quote">"Pertama kali kita main bareng"</p>
 
       <div class="first-date-photo">
         <div class="placeholder"></div>
         <img src="photos/firstdate.jpeg" alt="First Date Ana & Raihan">
       </div>
 
-      <!-- ============================================================
-           CERITA FIRST DATE — Edit teks di sini
-           ============================================================ -->
+      <!-- CERITA FIRST DATE -->
       <p class="s4-story">
-        5 September 2025 — pergi ke pantai, mainan air, tawa yang ga ada habisnya.
-        Itu pertama kali aku sadar… kamu beda. Dan aku mau ini terus berlanjut.
-        <!-- Ganti / tambah cerita first date kamu di sini -->
+        kita pergi ke pantai, dan di situ kamu confess perasaanmu ke aku sambil ngasih bunga, 
+        aku nerima kamu hari itu dan setelah itu kita main air sampai kamu baju dan celana kamu 
+        basah sambil ketawa terus.
       </p>
 
-      <div class="date-badge">💍 Resmi jadian · 5 September 2025</div>
+      <div class="date-badge">Resmi jadian · 5 September 2025</div>
 
     </div>
   </div>
 
 
-  <!-- ══════════════════════════════════════════
-       SCENE 5 — SLIDER FOTO KENANGAN
-       ══════════════════════════════════════════ -->
+  <!-- SCENE 5 — SLIDER FOTO KENANGAN -->
   <div class="scene" id="scene-5">
     <div class="scene-scroll">
-
+ 
       <p class="section-label label-gold">— Kenangan kita —</p>
       <h2 style="font-family:'DM Serif Display',serif;font-size:26px;font-style:italic;color:var(--cream);margin-bottom:22px;">
         Semakin hari,<br>semakin dekat 🤍
@@ -177,15 +150,9 @@
 
       <div id="slider-wrap">
         <div id="slider-track">
-          <!-- ============================================================
-               SLIDE ITEMS — Ganti .ph / .ph-label dengan <img src="...">
-               Tambah .slide-item baru untuk lebih banyak foto
-               ============================================================ -->
           <div class="slide-item"><div class="ph"></div> <img src="photos/kenangan-1.jpg"></div>
           <div class="slide-item"><div class="ph"></div> <img src="photos/kenangan-2.jpg"></div>
           <div class="slide-item"><div class="ph"></div> <img src="photos/kenangan-3.jpg"></div>
-          <div class="slide-item"><div class="ph"></div> <img src="photos/kenangan-4.jpg"></div>
-          <div class="slide-item"><div class="ph"></div> <img src="photos/kenangan-5.png"></div>
         </div>
       </div>
 
@@ -196,9 +163,7 @@
   </div>
 
 
-  <!-- ══════════════════════════════════════════
-       SCENE 6 — HAL KECIL YANG AKU SUKA
-       ══════════════════════════════════════════ -->
+  <!-- SCENE 6 — HAL KECIL YANG AKU SUKA -->
   <div class="scene" id="scene-6">
     <div class="scene-scroll">
 
@@ -246,9 +211,7 @@
   </div>
 
 
-  <!-- ══════════════════════════════════════════
-       SCENE 7 — VIDEO UCAPAN
-       ══════════════════════════════════════════ -->
+  <!-- SCENE 7 — VIDEO UCAPAN -->
   <div class="scene" id="scene-7">
     <div class="scene-scroll">
 
@@ -258,10 +221,6 @@
         dari aku sendiri."
       </p>
 
-      <!-- ============================================================
-           VIDEO UCAPAN ANA
-           Hapus komentar di bawah & pastikan file ada di videos/
-           ============================================================ -->
       <div id="video-wrap">
         <video id="main-video" controls playsinline>
           <source src="videos/ucapan.mp4" type="video/mp4">
@@ -274,16 +233,10 @@
   </div>
 
 
-  <!-- ══════════════════════════════════════════
-       SCENE 8 — ENDING (CINEMATIC)
-       ══════════════════════════════════════════ -->
+  <!-- SCENE 8 — ENDING -->
   <div class="scene" id="scene-8">
     <div class="scene-scroll">
 
-      <!-- ============================================================
-           FOTO KITA BERDUA (ending)
-           Hapus komentar & ganti src
-           ============================================================ -->
       <div class="ending-photo">
         <div class="ph"><br> </div>
         <img id="ending-img" src="photos/kita-berdua.jpg" alt="Ana & Raihan"> 
@@ -302,9 +255,7 @@
   </div>
 
 
-  <!-- ══════════════════════════════════════════
-       SCENE 9 — BTS
-       ══════════════════════════════════════════ -->
+  <!-- SCENE 9 — BTS -->
   <div class="scene" id="scene-9">
     <div class="scene-scroll">
 
@@ -317,10 +268,6 @@
         who made all of this just for you."
       </p>
 
-      <!-- ============================================================
-           VIDEO BTS
-           Hapus komentar & ganti src
-           ============================================================ -->
       <div id="bts-video-wrap">
         <video controls playsinline>
           <source src="videos/bts.mp4" type="video/mp4">

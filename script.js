@@ -1,43 +1,28 @@
-/* ============================================================
-   BIRTHDAY RAIHAN — script.js
-   Ana × Raihan · 2025
-   ============================================================ */
+// CONFIG — Edit sesuai kebutuhan Anda
 
-// ============================================================
-// CONFIG — Edit sesuai kebutuhan Ana
-// ============================================================
 const CONFIG = {
   musicVolume: 0.32,
-  musicFadeOut: 0.08,    // volume saat video ucapan play
-  musicFadeIn: 1800,     // ms fade in saat start
-  musicFadeOutMs: 1600,  // ms fade out saat video play
+  musicFadeOut: 0.08,  
+  musicFadeIn: 1800,     
+  musicFadeOutMs: 1600,  
 
-  // --- Typewriter lines Scene 3 ---
-  // cls options: "tw-line" | "tw-line date" | "tw-line highlight" | "tw-line small"
+  // Typewriter lines Scene 3 
   typewriterLines: [
-    { text: "5 Juli 2025…", cls: "tw-line date" },
+    { text: "25 Desember 2024…", cls: "tw-line date" },
     { text: "Kamu balas catatan IG ku.", cls: "tw-line" },
-    { text: "Dari satu notif kecil itu…", cls: "tw-line" },
-    { text: "semuanya dimulai.", cls: "tw-line highlight" },
-    // ============================================================
-    // EDIT INI: Tambah/ganti baris cerita awal kenal di sini
-    // Contoh:
-    // { text: "Aku bahkan ga nyangka bakal sejauh ini…", cls: "tw-line small" },
-    // { text: "Tapi ternyata kamu beda dari yang lain.", cls: "tw-line" },
-    // ============================================================
-    { text: "[ Tulis cerita awal kenal kalian di sini… ]", cls: "tw-line small" },
+    { text: "Dari satu notif sederhana itu…", cls: "tw-line" },
+    { text: "cerita kita dimulai.", cls: "tw-line highlight" },
+    { text: "Tanggal 25 Desember 2024 aku pernah bikin catatan ig “kapan bisa cosdate ya” terus kamu bales “gtww”, aku jawab “hanya bisa memandang org' cosdate”, dan kamu cuma kasih reaksi love, habis itu ya sudah selesai sampai situ. Tapi beberapa bulan kemudian, tepatnya 8 Juli 2025, aku bikin catatan ig lagi tulisannya “kangen cosplay”, dan kali ini kamu bales “kuy cosplay”. Dari situ kita mulai ngobrol tentang event cosplay, anime, dan hal-hal jejepangan, sampai akhirnya kenal nama, tahu cerita satu sama lain, sering kirim-kiriman reels, dan pelan-pelan jadi dekat. Sampai akhirnya kamu ngajak aku main bareng pertama kali di 5 September 2025, dan dari situ cerita kita benar-benar dimulai.", cls: "tw-line small" },
   ],
 
-  // --- Slider captions Scene 5 ---
+  // Slider captions Scene 5 
   sliderCaptions: [
-    "Kita nulis cerita kita sendiri 🤍",
     "Setiap foto nyimpen sejuta kenangan…",
     "Aku seneng banget bisa ada di sini, sama kamu.",
-    "Semakin hari, semakin sayang.",
-    "Semoga masih banyak foto lagi yang kita ambil 🌸",
+    "Semoga masih banyak foto lagi yang kita ambil"
   ],
 
-  // --- Scene name labels (progress bar) ---
+  // progress bar
   sceneNames: [
     "",
     "🎂 Countdown",
@@ -52,9 +37,7 @@ const CONFIG = {
   ],
 };
 
-// ============================================================
 // STATE
-// ============================================================
 let currentScene = 0;
 const TOTAL_SCENES = 9;
 let sliderInterval  = null;
@@ -64,19 +47,15 @@ let isMusicPlaying  = false;
 
 const music = document.getElementById('bg-music');
 
-// ============================================================
 // BOOT
-// ============================================================
 document.addEventListener('DOMContentLoaded', () => {
   buildPreParticles();
   document.getElementById('scene-pre').addEventListener('click', startStory);
 });
 
-// ============================================================
 // START STORY
-// ============================================================
 function startStory() {
-  if (isMusicPlaying) return; // prevent double tap
+  if (isMusicPlaying) return; 
   isMusicPlaying = true;
 
   music.volume = 0;
@@ -96,9 +75,7 @@ function startStory() {
   startFloatingHearts();
 }
 
-// ============================================================
 // SCENE NAVIGATION
-// ============================================================
 function goToScene(n) {
   if (n < 1 || n > TOTAL_SCENES) return;
 
@@ -152,9 +129,7 @@ function goToScene(n) {
 function nextScene() { doFlash(); goToScene(currentScene + 1); }
 function prevScene() { doFlash(); goToScene(currentScene - 1); }
 
-// ============================================================
 // PROGRESS
-// ============================================================
 function updateProgress() {
   const pct = Math.round((currentScene / TOTAL_SCENES) * 100);
   document.getElementById('progress-fill').style.width = pct + '%';
@@ -167,15 +142,13 @@ function updateSceneCounter() {
     '0' + currentScene + ' / 0' + TOTAL_SCENES;
 }
 
-// ============================================================
 // SCENE ENTER HOOKS
-// ============================================================
 function onEnter(n) {
   const fn = {
     1: enterCountdown,
     2: enterChildhood,
     3: enterTypewriter,
-    4: () => {}, // static
+    4: () => {}, 
     5: enterSlider,
     6: enterJokes,
     7: enterVideo,
@@ -185,12 +158,9 @@ function onEnter(n) {
   if (fn[n]) fn[n]();
 }
 
-// ============================================================
 // SCENE 1 — COUNTDOWN
-// ============================================================
 function enterCountdown() {
   if (countdownDone) {
-    // Jika countdown sudah selesai, langsung tampilkan Happy Birthday (ring sudah hidden)
     const ringEl = document.querySelector('.countdown-ring');
     if (ringEl) { ringEl.style.display = 'none'; ringEl.style.opacity = '0'; }
     document.getElementById('bday-title').style.display = 'block';
@@ -212,15 +182,13 @@ function enterCountdown() {
   const CIRCUMFERENCE = 565;
   let count = 3;
   numEl.textContent = count;
-  if (ring) ring.style.strokeDashoffset = '0';
+  if (ring) ring.style.strokeDashoffset = '0'; // ring selalu full
 
   const tick = setInterval(() => {
-    // Vibrate saat angka 1 (countdown terakhir sebelum 0)
     if (count === 1 && navigator.vibrate) {
       navigator.vibrate([120, 60, 200]);
     }
 
-    // Pulse animation
     numEl.style.transform = 'scale(1.25)';
     numEl.style.opacity   = '0.5';
     setTimeout(() => {
@@ -228,11 +196,8 @@ function enterCountdown() {
       numEl.style.opacity   = '1';
     }, 200);
 
-    // Ring progress
-    if (ring) {
-      const offset = CIRCUMFERENCE * (count / 3);
-      ring.style.strokeDashoffset = String(CIRCUMFERENCE - offset);
-    }
+    // Ring tetap full sepanjang countdown — tidak dikurangi
+    if (ring) ring.style.strokeDashoffset = '0';
 
     count--;
     if (count > 0) {
@@ -244,7 +209,6 @@ function enterCountdown() {
 
       numEl.style.opacity = '0';
       setTimeout(() => {
-        // Sembunyikan seluruh ring wrapper agar Happy Birthday bisa center
         const ringEl = document.querySelector('.countdown-ring');
         if (ringEl) {
           ringEl.style.transition = 'opacity 0.4s ease';
@@ -262,9 +226,7 @@ function enterCountdown() {
   }, 900);
 }
 
-// ============================================================
 // CONFETTI
-// ============================================================
 function launchConfetti() {
   const colors = ['#c8837a','#c9a96e','#f5efe6','#fff','#e8b4b8','#b8d8b0','#f0c4a0'];
   const shapes = ['circle','square','rect'];
@@ -310,9 +272,7 @@ function launchBirthdaySparkles() {
   }
 }
 
-// ============================================================
 // SCENE 2 — CHILDHOOD
-// ============================================================
 function enterChildhood() {
   const badge   = document.getElementById('age-badge');
   const ageLabel = document.getElementById('age-label');
@@ -337,9 +297,7 @@ function enterChildhood() {
   setTimeout(() => caption.classList.add('visible'), 1000);
 }
 
-// ============================================================
 // SCENE 3 — TYPEWRITER
-// ============================================================
 function enterTypewriter() {
   const container = document.getElementById('tw-container');
   container.innerHTML = '';
@@ -360,7 +318,7 @@ function enterTypewriter() {
     div.appendChild(cursor);
 
     let charIdx = 0;
-    const chars = [...text]; // supports emoji
+    const chars = [...text]; 
 
     const iv = setInterval(() => {
       if (charIdx >= chars.length) {
@@ -378,9 +336,7 @@ function enterTypewriter() {
   setTimeout(typeLine, 900);
 }
 
-// ============================================================
 // SCENE 5 — SLIDER
-// ============================================================
 function enterSlider() {
   const slides = document.querySelectorAll('.slide-item');
   const dotsEl = document.getElementById('slider-dots');
@@ -417,9 +373,7 @@ function renderSlide(slides) {
   }, 300);
 }
 
-// ============================================================
 // SCENE 6 — JOKES
-// ============================================================
 function enterJokes() {
   const cards = document.querySelectorAll('.joke-card');
   cards.forEach(c => c.classList.remove('pop'));
@@ -428,9 +382,7 @@ function enterJokes() {
   });
 }
 
-// ============================================================
 // SCENE 7 — VIDEO UCAPAN
-// ============================================================
 function enterVideo() {
   const preText = document.getElementById('pre-video-text');
   preText.classList.remove('visible');
@@ -444,12 +396,10 @@ function enterVideo() {
 }
 
 function setupVideoMusic(vid, isBTS) {
-  // Pastikan tidak autoplay & pakai kontrol bawaan browser
   vid.removeAttribute('autoplay');
   vid.setAttribute('controls', '');
   vid.pause();
 
-  // Cegah event listener dobel
   if (vid._musicHooked) return;
   vid._musicHooked = true;
 
@@ -482,9 +432,7 @@ function setupVideoMusic(vid, isBTS) {
   });
 }
 
-// ============================================================
 // SCENE 8 — ENDING
-// ============================================================
 function enterEnding() {
   ['ending-title', 'ending-sub', 'ending-hearts'].forEach(id => {
     const el = document.getElementById(id);
@@ -503,9 +451,7 @@ function enterEnding() {
   }, 400);
 }
 
-// ============================================================
 // SCENE 9 — BTS
-// ============================================================
 function enterBTS() {
   const btsWrap = document.getElementById('bts-video-wrap');
   const btsVid  = btsWrap ? btsWrap.querySelector('video') : null;
@@ -533,9 +479,7 @@ function launchEndingSparkles() {
   }
 }
 
-// ============================================================
 // MUSIC NOTES (floating icons)
-// ============================================================
 const NOTE_SYMBOLS = ['♪','♫','♩','♬','𝅘𝅥𝅮','♭'];
 
 function startMusicNotes() {
@@ -544,7 +488,6 @@ function startMusicNotes() {
     spawnNote();
   }, 2800);
 
-  // burst on start
   for (let i = 0; i < 4; i++) {
     setTimeout(spawnNote, 300 + i * 400);
   }
@@ -574,13 +517,11 @@ function spawnNote() {
   setTimeout(() => el.remove(), (dur + delay + 0.5) * 1000);
 }
 
-// ============================================================
 // FLOATING HEARTS (random, subtle)
-// ============================================================
 function startFloatingHearts() {
   setInterval(() => {
     if (currentScene === 0 || currentScene === 7) return;
-    if (Math.random() > 0.4) return; // ~40% chance each tick
+    if (Math.random() > 0.4) return;
     spawnHeart();
   }, 5000);
 }
@@ -602,9 +543,7 @@ function spawnHeart() {
   setTimeout(() => el.remove(), dur * 1000 + 500);
 }
 
-// ============================================================
 // PRE-SCENE PARTICLES
-// ============================================================
 function buildPreParticles() {
   const wrap = document.getElementById('pre-particles');
   if (!wrap) return;
@@ -624,9 +563,7 @@ function buildPreParticles() {
   }
 }
 
-// ============================================================
-// TAP ZONE — nonaktifkan saat kursor/sentuhan di atas elemen video
-// ============================================================
+// TAP ZONE 
 function setupTapZoneVideoGuard() {
   const tapLeft  = document.getElementById('tap-left');
   const tapRight = document.getElementById('tap-right');
@@ -639,7 +576,6 @@ function setupTapZoneVideoGuard() {
   }
 
   [tapLeft, tapRight].forEach(zone => {
-    // Intercept touchstart — block navigation se sentuh area video
     zone.addEventListener('touchstart', (e) => {
       if (isOverVideo(e)) { e.stopImmediatePropagation(); e.preventDefault(); }
     }, { capture: true, passive: false });
@@ -650,7 +586,6 @@ function setupTapZoneVideoGuard() {
   });
 }
 
-
 function doFlash() {
   const f = document.getElementById('flash');
   if (!f) return;
@@ -658,9 +593,7 @@ function doFlash() {
   setTimeout(() => f.classList.remove('on'), 100);
 }
 
-// ============================================================
 // VOLUME FADE UTIL
-// ============================================================
 function fadeVol(audio, from, to, duration) {
   const steps    = 24;
   const stepTime = duration / steps;
