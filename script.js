@@ -26,11 +26,13 @@ const CONFIG = {
   sceneNames: [
     "",
     "🎂 Countdown",
-    "🌱 19 th",
+    "🌟 Foto Sekarang",
+    "🌱 Masa Kecil",
+    "💭 Ingat?",
     "💌 Awal Kenal",
     "🌊 First Date",
     "📸 Kenangan Kita",
-    "🌸 Hal Kecil Tentang Kamu",
+    "🌸 Hal Kecil",
     "🎥 Pesan dari aku",
     "🌸 Selamanya",
     "🎬 Behind The Story",
@@ -39,7 +41,8 @@ const CONFIG = {
 
 // STATE
 let currentScene = 0;
-const TOTAL_SCENES = 9;
+const TOTAL_SCENES = 11;
+const SCENE_IDS = ['','scene-1','scene-2','scene-2b','scene-2c','scene-3','scene-4','scene-5','scene-6','scene-7','scene-8','scene-9'];
 let sliderInterval  = null;
 let sliderIdx       = 0;
 let countdownDone   = false;
@@ -82,19 +85,24 @@ function goToScene(n) {
   const prevEl = document.querySelector('.scene.active');
   if (prevEl) prevEl.classList.remove('active');
 
-  // Stop slider if leaving scene 5
-  if (currentScene === 5 && n !== 5 && sliderInterval) {
+  // Stop slider if leaving scene 7 (was 5)
+  if (currentScene === 7 && n !== 7 && sliderInterval) {
     clearInterval(sliderInterval);
     sliderInterval = null;
   }
 
-  // Resume music volume if leaving video scene
-  if (currentScene === 7 && n !== 7) {
+  // Stop childhood slideshow if leaving scene 3 (scene-2b)
+  if (currentScene === 3 && n !== 3 && childhoodInterval) {
+    clearInterval(childhoodInterval);
+    childhoodInterval = null;
+  }
+
+  // Resume music volume if leaving video scene (scene 9 = scene-7)
+  if (currentScene === 9 && n !== 9) {
     const vid = document.getElementById('main-video');
     if (vid && !vid.paused) {
       vid.pause();
     }
-    // Kembalikan volume musik jika bukan BTS
     if (music.volume < CONFIG.musicVolume) {
       if (!music.paused) {
         fadeVol(music, music.volume, CONFIG.musicVolume, 2000);
@@ -105,12 +113,11 @@ function goToScene(n) {
     }
   }
 
-  if (currentScene === 9 && n !== 9) {
+  if (currentScene === 11 && n !== 11) {
     const btsVid = document.querySelector('#bts-video-wrap video');
     if (btsVid && !btsVid.paused) {
       btsVid.pause();
     }
-    // Resume musik jika sedang berhenti karena BTS
     if (music.paused) {
       music.play().catch(() => {});
       fadeVol(music, 0, CONFIG.musicVolume, 2000);
@@ -118,7 +125,7 @@ function goToScene(n) {
   }
 
   currentScene = n;
-  const sceneEl = document.getElementById('scene-' + n);
+  const sceneEl = document.getElementById(SCENE_IDS[n]);
   if (sceneEl) sceneEl.classList.add('active');
 
   updateProgress();
@@ -138,22 +145,29 @@ function updateProgress() {
 }
 
 function updateSceneCounter() {
-  document.getElementById('scene-counter').textContent =
-    '0' + currentScene + ' / 0' + TOTAL_SCENES;
+  const s = currentScene < 10 ? '0' + currentScene : '' + currentScene;
+  const t = TOTAL_SCENES < 10 ? '0' + TOTAL_SCENES : '' + TOTAL_SCENES;
+  document.getElementById('scene-counter').textContent = s + ' / ' + t;
 }
 
 // SCENE ENTER HOOKS
+let childhoodInterval = null;
+
 function onEnter(n) {
+  // n: 1=countdown, 2=foto-sekarang, 3=masa-kecil, 4=pertanyaan, 5=awal-kenal,
+  //    6=first-date, 7=slider, 8=hal-kecil, 9=video, 10=ending, 11=bts
   const fn = {
-    1: enterCountdown,
-    2: enterChildhood,
-    3: enterTypewriter,
-    4: () => {}, 
-    5: enterSlider,
-    6: enterJokes,
-    7: enterVideo,
-    8: enterEnding,
-    9: enterBTS,
+    1:  enterCountdown,
+    2:  enterFotoSekarang,
+    3:  enterChildhoodSlide,
+    4:  enterQuestion,
+    5:  enterTypewriter,
+    6:  () => {},
+    7:  enterSlider,
+    8:  enterJokes,
+    9:  enterVideo,
+    10: enterEnding,
+    11: enterBTS,
   };
   if (fn[n]) fn[n]();
 }
@@ -185,24 +199,25 @@ function enterCountdown() {
   if (ring) ring.style.strokeDashoffset = '0'; // ring selalu full
 
   const tick = setInterval(() => {
-    if (count === 1 && navigator.vibrate) {
-      navigator.vibrate([120, 60, 200]);
-    }
-
-    numEl.style.transform = 'scale(1.25)';
-    numEl.style.opacity   = '0.5';
-    setTimeout(() => {
-      numEl.style.transform = 'scale(1)';
-      numEl.style.opacity   = '1';
-    }, 200);
-
-    // Ring tetap full sepanjang countdown — tidak dikurangi
-    if (ring) ring.style.strokeDashoffset = '0';
-
     count--;
+
     if (count > 0) {
+      // Update angka dulu, baru animasi
       numEl.textContent = count;
+      numEl.style.transform = 'scale(1.25)';
+      numEl.style.opacity   = '0.5';
+      setTimeout(() => {
+        numEl.style.transform = 'scale(1)';
+        numEl.style.opacity   = '1';
+      }, 200);
+
+      if (ring) ring.style.strokeDashoffset = '0';
+
+      if (count === 1 && navigator.vibrate) {
+        navigator.vibrate([120, 60, 200]);
+      }
     } else {
+      // count === 0 → selesai
       clearInterval(tick);
       countdownDone = true;
       if (navigator.vibrate) navigator.vibrate([150, 80, 200, 80, 150]);
@@ -215,7 +230,7 @@ function enterCountdown() {
           ringEl.style.opacity    = '0';
           setTimeout(() => { ringEl.style.display = 'none'; }, 420);
         }
-        numEl.style.display  = 'none';
+        numEl.style.display   = 'none';
         titleEl.style.display = 'block';
         subEl.style.display   = 'block';
         document.getElementById('scene-1').classList.add('show-birthday');
@@ -272,29 +287,56 @@ function launchBirthdaySparkles() {
   }
 }
 
-// SCENE 2 — CHILDHOOD
-function enterChildhood() {
-  const badge   = document.getElementById('age-badge');
+// SCENE 2 — FOTO SEKARANG
+function enterFotoSekarang() {
+  const badge    = document.getElementById('age-badge');
   const ageLabel = document.getElementById('age-label');
-  const caption = document.getElementById('s2-caption');
-  const photos  = document.querySelectorAll('.childhood-photo');
+  const caption  = document.getElementById('s2-caption');
 
   badge.classList.remove('visible');
   if (ageLabel) ageLabel.classList.remove('visible');
   caption.classList.remove('visible');
-  photos.forEach(p => p.classList.remove('visible'));
 
   setTimeout(() => badge.classList.add('visible'), 300);
   setTimeout(() => { if (ageLabel) ageLabel.classList.add('visible'); }, 600);
-
-  photos.forEach((p, i) => {
-    setTimeout(() => {
-      photos.forEach(x => x.classList.remove('visible'));
-      p.classList.add('visible');
-    }, 800 + i * 2600);
-  });
-
   setTimeout(() => caption.classList.add('visible'), 1000);
+}
+
+// SCENE 2B — MASA KECIL SLIDESHOW
+function enterChildhoodSlide() {
+  const slides = document.querySelectorAll('.childhood-slide');
+  const dotsEl = document.getElementById('cs-dots');
+  if (!dotsEl) return;
+
+  dotsEl.innerHTML = '';
+  let csIdx = 0;
+
+  slides.forEach((s, i) => {
+    s.classList.remove('active');
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    dotsEl.appendChild(d);
+  });
+  slides[0].classList.add('active');
+
+  function showSlide(idx) {
+    slides.forEach(s => s.classList.remove('active'));
+    slides[idx].classList.add('active');
+    document.querySelectorAll('#cs-dots .dot').forEach((d, i) =>
+      d.classList.toggle('active', i === idx)
+    );
+  }
+
+  if (childhoodInterval) clearInterval(childhoodInterval);
+  childhoodInterval = setInterval(() => {
+    csIdx = (csIdx + 1) % slides.length;
+    showSlide(csIdx);
+  }, 3000);
+}
+
+// SCENE 2C — PERTANYAAN
+function enterQuestion() {
+  // purely CSS-animated, nothing to do
 }
 
 // SCENE 3 — TYPEWRITER
@@ -484,7 +526,7 @@ const NOTE_SYMBOLS = ['♪','♫','♩','♬','𝅘𝅥𝅮','♭'];
 
 function startMusicNotes() {
   setInterval(() => {
-    if (currentScene === 0 || currentScene === 7) return; // pause during video
+    if (currentScene === 0 || currentScene === 9) return; // pause during video
     spawnNote();
   }, 2800);
 
@@ -520,7 +562,7 @@ function spawnNote() {
 // FLOATING HEARTS (random, subtle)
 function startFloatingHearts() {
   setInterval(() => {
-    if (currentScene === 0 || currentScene === 7) return;
+    if (currentScene === 0 || currentScene === 9) return;
     if (Math.random() > 0.4) return;
     spawnHeart();
   }, 5000);

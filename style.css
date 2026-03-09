@@ -333,7 +333,113 @@ body::after {
 .label-rose { color: var(--rose); }
 .label-muted{ color: var(--muted); }
 
-/* SCENE 2 — MASA KECIL */
+/* SCENE 2 — FOTO SEKARANG */
+.now-photo-wrap {
+  width: 100%; height: 320px;
+  background: #1a1618;
+  border-radius: 6px; overflow: hidden;
+  margin-bottom: 22px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+.now-photo-wrap::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 55%);
+  pointer-events: none;
+}
+.now-photo-img {
+  width: 100%; height: 100%; object-fit: cover;
+  position: absolute; inset: 0;
+}
+.photo-placeholder-box {
+  width: 60px; height: 60px;
+  border: 1px dashed rgba(255,255,255,0.1);
+  border-radius: 50%;
+  position: relative; z-index: 1;
+}
+
+/* SCENE 2B — CHILDHOOD SLIDESHOW */
+.childhood-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px; font-style: italic;
+  color: var(--cream); line-height: 1.5;
+  margin-bottom: 22px;
+}
+
+.childhood-slideshow {
+  width: 100%; height: 290px;
+  border-radius: 6px; overflow: hidden;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  margin-bottom: 16px;
+}
+
+.childhood-slide {
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  display: flex; align-items: flex-end; justify-content: center;
+  background: #1a1618;
+}
+.childhood-slide.active { opacity: 1; }
+.childhood-slide::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%);
+  pointer-events: none;
+}
+.childhood-slide img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+}
+.cs-caption {
+  position: relative; z-index: 2;
+  font-size: 13px; color: rgba(255,255,255,0.85);
+  font-style: italic; padding-bottom: 18px;
+  letter-spacing: 0.03em; line-height: 1.6;
+}
+
+/* SCENE 2C — PERTANYAAN */
+.scene-question-wrap {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 20px; padding: 40px 28px;
+}
+.question-kecil {
+  font-size: 11px; letter-spacing: 0.5em;
+  color: var(--muted); text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease forwards 0.3s;
+  animation-fill-mode: forwards;
+}
+.question-big {
+  font-family: 'DM Serif Display', serif;
+  font-size: 38px; font-style: italic;
+  color: var(--cream); line-height: 1.35;
+  text-align: center;
+  opacity: 0;
+  animation: fadeInUp 1s ease forwards 0.8s;
+  animation-fill-mode: forwards;
+  text-shadow: 0 2px 30px rgba(200,131,122,0.3);
+}
+.question-sub {
+  font-size: 20px; letter-spacing: 0.5em;
+  color: var(--gold); opacity: 0;
+  animation: fadeInUp 0.8s ease forwards 1.6s;
+  animation-fill-mode: forwards;
+}
+
+/* SCENE 3 — scroll from top */
+#scene-3 .scene-scroll {
+  justify-content: flex-start;
+  padding-top: 60px;
+}
+
+
+/* SCENE 2 — AGE BADGE (shared) */
 .age-badge {
   font-family: 'DM Serif Display', serif;
   font-size: 52px; color: var(--gold);
@@ -495,7 +601,8 @@ body::after {
   color: var(--muted); letter-spacing: 0.1em;
 }
 
-#slider-dots { display: flex; gap: 7px; margin-top: 18px; justify-content: center; }
+#slider-dots { display: flex; flex-direction: row; gap: 10px; margin-top: 18px; justify-content: center; }
+#cs-dots     { display: flex; flex-direction: row; gap: 10px; margin-top: 14px; justify-content: center; }
 .dot {
   width: 5px; height: 5px; border-radius: 50%;
   background: rgba(255,255,255,0.2);
