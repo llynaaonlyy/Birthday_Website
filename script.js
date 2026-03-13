@@ -12,7 +12,7 @@ const CONFIG = {
     { text: "Kamu balas catatan IG ku.", cls: "tw-line" },
     { text: "Dari satu notif sederhana itu…", cls: "tw-line" },
     { text: "cerita kita dimulai.", cls: "tw-line highlight" },
-    { text: "Tanggal 25 Desember 2024 aku pernah bikin catatan ig “kapan bisa cosdate ya” terus kamu bales “gtww”, aku jawab “hanya bisa memandang org' cosdate”, dan kamu cuma kasih reaksi love, habis itu ya sudah selesai sampai situ. Tapi beberapa bulan kemudian, tepatnya 8 Juli 2025, aku bikin catatan ig lagi tulisannya “kangen cosplay”, dan kali ini kamu bales “kuy cosplay”. Dari situ kita mulai ngobrol tentang event cosplay, anime, dan hal-hal jejepangan, sampai akhirnya kenal nama, tahu cerita satu sama lain, sering kirim-kiriman reels, dan pelan-pelan jadi dekat. Sampai akhirnya kamu ngajak aku main bareng pertama kali di 5 September 2025, dan dari situ cerita kita benar-benar dimulai.", cls: "tw-line small" },
+    { text: "Tanggal 25 Desember 2024 aku pernah bikin catatan ig \u2018kapan bisa cosdate ya\u2019 terus kamu bales \u2018gtww\u2019, aku jawab \u2018hanya bisa memandang org\u2019 cosdate\u2019, dan kamu cuma kasih reaksi love, habis itu ya sudah selesai sampai situ. Tapi beberapa bulan kemudian, tepatnya 8 Juli 2025, aku bikin catatan ig lagi tulisannya \u2018kangen cosplay\u2019, dan kali ini kamu bales \u2018kuy cosplay\u2019. Dari situ kita mulai ngobrol tentang event cosplay, anime, dan hal-hal jejepangan, sampai akhirnya kenal nama, tahu cerita satu sama lain, sering kirim-kiriman reels, dan pelan-pelan jadi dekat. Sampai akhirnya kamu ngajak aku main bareng pertama kali di 5 September 2025, dan dari situ cerita kita benar-benar dimulai.", cls: "tw-line small" },
   ],
 
   // Slider captions Scene 5 
@@ -22,7 +22,8 @@ const CONFIG = {
     "Semoga masih banyak foto lagi yang kita ambil"
   ],
 
-  // progress bar
+  // progress bar scene names
+  // index 0 = pre/unused, 1..TOTAL_SCENES = scene labels
   sceneNames: [
     "",
     "🎂 Countdown",
@@ -32,8 +33,7 @@ const CONFIG = {
     "💌 Awal Kenal",
     "🌊 First Date",
     "📸 Kenangan Kita",
-    "🌸 Hal Kecil",
-    "🎥 Pesan dari aku",
+    "🌸 Doa & Harapan",
     "🌸 Selamanya",
     "🎬 Behind The Story",
   ],
@@ -41,8 +41,9 @@ const CONFIG = {
 
 // STATE
 let currentScene = 0;
-const TOTAL_SCENES = 11;
-const SCENE_IDS = ['','scene-1','scene-2','scene-2b','scene-2c','scene-3','scene-4','scene-5','scene-6','scene-7','scene-8','scene-9'];
+const TOTAL_SCENES = 10;
+// index 0 unused, 1–10 map to scene element IDs
+const SCENE_IDS = ['','scene-1','scene-2','scene-2b','scene-2c','scene-3','scene-4','scene-5','scene-6','scene-7','scene-8'];
 let sliderInterval  = null;
 let sliderIdx       = 0;
 let countdownDone   = false;
@@ -85,7 +86,7 @@ function goToScene(n) {
   const prevEl = document.querySelector('.scene.active');
   if (prevEl) prevEl.classList.remove('active');
 
-  // Stop slider if leaving scene 7 (was 5)
+  // Stop slider if leaving scene 7 (kenangan)
   if (currentScene === 7 && n !== 7 && sliderInterval) {
     clearInterval(sliderInterval);
     sliderInterval = null;
@@ -97,23 +98,8 @@ function goToScene(n) {
     childhoodInterval = null;
   }
 
-  // Resume music volume if leaving video scene (scene 9 = scene-7)
-  if (currentScene === 9 && n !== 9) {
-    const vid = document.getElementById('main-video');
-    if (vid && !vid.paused) {
-      vid.pause();
-    }
-    if (music.volume < CONFIG.musicVolume) {
-      if (!music.paused) {
-        fadeVol(music, music.volume, CONFIG.musicVolume, 2000);
-      } else {
-        music.play().catch(() => {});
-        fadeVol(music, 0, CONFIG.musicVolume, 2000);
-      }
-    }
-  }
-
-  if (currentScene === 11 && n !== 11) {
+  // Resume music if leaving BTS scene (scene 10)
+  if (currentScene === 10 && n !== 10) {
     const btsVid = document.querySelector('#bts-video-wrap video');
     if (btsVid && !btsVid.paused) {
       btsVid.pause();
@@ -154,8 +140,9 @@ function updateSceneCounter() {
 let childhoodInterval = null;
 
 function onEnter(n) {
-  // n: 1=countdown, 2=foto-sekarang, 3=masa-kecil, 4=pertanyaan, 5=awal-kenal,
-  //    6=first-date, 7=slider, 8=hal-kecil, 9=video, 10=ending, 11=bts
+  // n: 1=countdown, 2=foto-sekarang, 3=masa-kecil, 4=pertanyaan,
+  //    5=awal-kenal, 6=first-date, 7=slider, 8=hal-kecil,
+  //    9=ending, 10=bts
   const fn = {
     1:  enterCountdown,
     2:  enterFotoSekarang,
@@ -165,9 +152,8 @@ function onEnter(n) {
     6:  () => {},
     7:  enterSlider,
     8:  enterJokes,
-    9:  enterVideo,
-    10: enterEnding,
-    11: enterBTS,
+    9:  enterEnding,
+    10: enterBTS,
   };
   if (fn[n]) fn[n]();
 }
@@ -193,16 +179,14 @@ function enterCountdown() {
   numEl.style.display   = 'block';
   numEl.style.opacity   = '1';
 
-  const CIRCUMFERENCE = 565;
   let count = 3;
   numEl.textContent = count;
-  if (ring) ring.style.strokeDashoffset = '0'; // ring selalu full
+  if (ring) ring.style.strokeDashoffset = '0';
 
   const tick = setInterval(() => {
     count--;
 
     if (count > 0) {
-      // Update angka dulu, baru animasi
       numEl.textContent = count;
       numEl.style.transform = 'scale(1.25)';
       numEl.style.opacity   = '0.5';
@@ -217,7 +201,6 @@ function enterCountdown() {
         navigator.vibrate([120, 60, 200]);
       }
     } else {
-      // count === 0 → selesai
       clearInterval(tick);
       countdownDone = true;
       if (navigator.vibrate) navigator.vibrate([150, 80, 200, 80, 150]);
@@ -336,7 +319,7 @@ function enterChildhoodSlide() {
 
 // SCENE 2C — PERTANYAAN
 function enterQuestion() {
-  // purely CSS-animated, nothing to do
+  // purely CSS-animated
 }
 
 // SCENE 3 — TYPEWRITER
@@ -378,7 +361,7 @@ function enterTypewriter() {
   setTimeout(typeLine, 900);
 }
 
-// SCENE 5 — SLIDER
+// SCENE 7 — SLIDER
 function enterSlider() {
   const slides = document.querySelectorAll('.slide-item');
   const dotsEl = document.getElementById('slider-dots');
@@ -415,7 +398,7 @@ function renderSlide(slides) {
   }, 300);
 }
 
-// SCENE 6 — JOKES
+// SCENE 8 — DOA & HARAPAN
 function enterJokes() {
   const cards = document.querySelectorAll('.joke-card');
   cards.forEach(c => c.classList.remove('pop'));
@@ -424,57 +407,7 @@ function enterJokes() {
   });
 }
 
-// SCENE 7 — VIDEO UCAPAN
-function enterVideo() {
-  const preText = document.getElementById('pre-video-text');
-  preText.classList.remove('visible');
-  setTimeout(() => preText.classList.add('visible'), 300);
-
-  const videoWrap = document.getElementById('video-wrap');
-  const vid = document.getElementById('main-video');
-  if (vid) {
-    setupVideoMusic(vid, false);
-  }
-}
-
-function setupVideoMusic(vid, isBTS) {
-  vid.removeAttribute('autoplay');
-  vid.setAttribute('controls', '');
-  vid.pause();
-
-  if (vid._musicHooked) return;
-  vid._musicHooked = true;
-
-  vid.addEventListener('play', () => {
-    if (isBTS) {
-      music.pause();
-    } else {
-      fadeVol(music, music.volume, CONFIG.musicFadeOut, CONFIG.musicFadeOutMs);
-    }
-  });
-
-  vid.addEventListener('pause', () => {
-    if (!vid.ended) {
-      if (isBTS) {
-        music.play().catch(() => {});
-        fadeVol(music, 0, CONFIG.musicVolume, 1800);
-      } else {
-        fadeVol(music, music.volume, CONFIG.musicVolume, 2000);
-      }
-    }
-  });
-
-  vid.addEventListener('ended', () => {
-    if (isBTS) {
-      music.play().catch(() => {});
-      fadeVol(music, 0, CONFIG.musicVolume, 2000);
-    } else {
-      fadeVol(music, music.volume, CONFIG.musicVolume, 2200);
-    }
-  });
-}
-
-// SCENE 8 — ENDING
+// SCENE 9 — ENDING
 function enterEnding() {
   ['ending-title', 'ending-sub', 'ending-hearts'].forEach(id => {
     const el = document.getElementById(id);
@@ -493,13 +426,38 @@ function enterEnding() {
   }, 400);
 }
 
-// SCENE 9 — BTS
+// SCENE 10 — BTS
 function enterBTS() {
   const btsWrap = document.getElementById('bts-video-wrap');
   const btsVid  = btsWrap ? btsWrap.querySelector('video') : null;
   if (btsVid) {
-    setupVideoMusic(btsVid, true);
+    setupVideoMusic(btsVid);
   }
+}
+
+function setupVideoMusic(vid) {
+  vid.removeAttribute('autoplay');
+  vid.setAttribute('controls', '');
+  vid.pause();
+
+  if (vid._musicHooked) return;
+  vid._musicHooked = true;
+
+  vid.addEventListener('play', () => {
+    music.pause();
+  });
+
+  vid.addEventListener('pause', () => {
+    if (!vid.ended) {
+      music.play().catch(() => {});
+      fadeVol(music, 0, CONFIG.musicVolume, 1800);
+    }
+  });
+
+  vid.addEventListener('ended', () => {
+    music.play().catch(() => {});
+    fadeVol(music, 0, CONFIG.musicVolume, 2000);
+  });
 }
 
 function launchEndingSparkles() {
@@ -526,7 +484,7 @@ const NOTE_SYMBOLS = ['♪','♫','♩','♬','𝅘𝅥𝅮','♭'];
 
 function startMusicNotes() {
   setInterval(() => {
-    if (currentScene === 0 || currentScene === 9) return; // pause during video
+    if (currentScene === 0) return;
     spawnNote();
   }, 2800);
 
@@ -559,10 +517,10 @@ function spawnNote() {
   setTimeout(() => el.remove(), (dur + delay + 0.5) * 1000);
 }
 
-// FLOATING HEARTS (random, subtle)
+// FLOATING HEARTS
 function startFloatingHearts() {
   setInterval(() => {
-    if (currentScene === 0 || currentScene === 9) return;
+    if (currentScene === 0) return;
     if (Math.random() > 0.4) return;
     spawnHeart();
   }, 5000);
@@ -605,7 +563,7 @@ function buildPreParticles() {
   }
 }
 
-// TAP ZONE 
+// TAP ZONE VIDEO GUARD
 function setupTapZoneVideoGuard() {
   const tapLeft  = document.getElementById('tap-left');
   const tapRight = document.getElementById('tap-right');
@@ -614,7 +572,7 @@ function setupTapZoneVideoGuard() {
     const touch = e.touches ? e.touches[0] : e;
     const el = document.elementFromPoint(touch.clientX, touch.clientY);
     if (!el) return false;
-    return el.closest('video') !== null || el.closest('#video-wrap') !== null || el.closest('#bts-video-wrap') !== null;
+    return el.closest('video') !== null || el.closest('#bts-video-wrap') !== null;
   }
 
   [tapLeft, tapRight].forEach(zone => {

@@ -91,7 +91,7 @@ body::after {
 }
 .scene-scroll::-webkit-scrollbar { display: none; }
 
-/* TAP ZONES — hanya di pinggir kiri/kanan, tengah bebas */
+/* TAP ZONES */
 #tap-left, #tap-right {
   position: fixed;
   top: 0; bottom: 68px;
@@ -261,6 +261,7 @@ body::after {
   width: 200px; height: 200px;
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 20px;
+  transition: opacity 0.4s ease;
 }
 .countdown-ring svg {
   position: absolute; inset: 0;
@@ -437,7 +438,6 @@ body::after {
   justify-content: flex-start;
   padding-top: 60px;
 }
-
 
 /* SCENE 2 — AGE BADGE (shared) */
 .age-badge {
@@ -621,7 +621,7 @@ body::after {
   transition: opacity 0.4s ease;
 }
 
-/* SCENE 6 — JOKES */
+/* SCENE 6 — DOA & HARAPAN */
 .joke-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
@@ -645,48 +645,13 @@ body::after {
   display: block;
 }
 
-/* SCENE 7 — VIDEO UCAPAN */
-.pre-video-text {
-  font-family: 'DM Serif Display', serif;
-  font-size: 19px; font-style: italic;
-  color: var(--cream); line-height: 1.8;
-  margin-bottom: 28px;
-  opacity: 0;
-}
-.pre-video-text.visible { animation: fadeInUp 1s ease forwards; animation-fill-mode: forwards; }
-
-#video-wrap {
-  width: 100%; border-radius: 6px;
-  overflow: hidden; background: #111;
-  position: relative;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-}
-#video-wrap video {
-  width: 100%; display: block;
-  max-height: 60vh; object-fit: contain;
+/* SCENE 6 — Scroll fix */
+#scene-6 .scene-scroll {
+  justify-content: flex-start;
+  padding-top: 60px;
 }
 
-.video-placeholder {
-  width: 100%; height: 280px;
-  background: #111; border-radius: 6px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 12px; color: var(--muted);
-  border: 1px dashed rgba(255,255,255,0.06);
-}
-.video-placeholder .v-icon { font-size: 40px; }
-.video-placeholder .v-label {
-  font-size: 11px; font-family: 'Inter', sans-serif;
-  letter-spacing: 0.18em; text-transform: uppercase;
-}
-
-.video-label {
-  font-size: 11px; letter-spacing: 0.3em;
-  color: var(--muted); text-transform: uppercase;
-  font-family: 'Inter', sans-serif; margin-top: 14px;
-}
-
-/* SCENE 8 — ENDING */
+/* SCENE 7 — ENDING */
 .ending-photo {
   width: 100%; height: 260px;
   background: #111; border-radius: 6px;
@@ -739,7 +704,7 @@ body::after {
   animation-fill-mode: forwards;
 }
 
-/* SCENE 9 — BTS */
+/* SCENE 8 — BTS */
 .bts-quote {
   font-size: 14px; color: var(--muted);
   margin-bottom: 22px; font-style: italic;
@@ -750,24 +715,11 @@ body::after {
   width: 100%; border-radius: 6px;
   overflow: hidden; background: #111;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  position: relative;
 }
 #bts-video-wrap video {
   width: 100%; display: block;
   max-height: 52vh; object-fit: contain;
-}
-
-.bts-placeholder {
-  width: 100%; height: 240px;
-  background: #111; border-radius: 6px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 12px; color: var(--muted);
-  border: 1px dashed rgba(255,255,255,0.06);
-}
-.bts-placeholder .b-icon { font-size: 40px; }
-.bts-placeholder .b-label {
-  font-size: 11px; font-family: 'Inter', sans-serif;
-  letter-spacing: 0.18em; text-transform: uppercase;
 }
 
 .sign-off {
@@ -797,7 +749,7 @@ body::after {
   100% { opacity: 0; transform: translateY(-120px) rotate(20deg) scale(1.2); }
 }
 
-/* HEARTBEAT PULSE (random hearts appear) */
+/* HEARTBEAT PULSE */
 .floating-heart {
   position: fixed;
   pointer-events: none; z-index: 50;
@@ -810,7 +762,7 @@ body::after {
   100% { opacity: 0; transform: translateY(-100px) scale(0.8); }
 }
 
-/* STAR / SPARKLE particles (Scene 8 ending) */
+/* SPARKLE particles */
 .sparkle {
   position: fixed;
   pointer-events: none; z-index: 50;
@@ -850,64 +802,4 @@ body::after {
 @keyframes shimmer {
   0%,100% { opacity: 0.7; }
   50%      { opacity: 1; text-shadow: 0 0 20px rgba(201,169,110,0.5); }
-}
-/* CUSTOM VIDEO PLAY BUTTON OVERLAY */
-.play-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,0.35);
-  z-index: 10;
-  transition: background 0.3s ease;
-}
-.play-overlay:hover { background: rgba(0,0,0,0.2); }
-
-.custom-play-btn {
-  width: 64px; height: 64px;
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.85);
-  background: rgba(0,0,0,0.5);
-  color: #fff;
-  font-size: 22px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  backdrop-filter: blur(4px);
-  transition: transform 0.2s ease, background 0.2s ease;
-  padding-left: 4px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
-}
-.custom-play-btn:active {
-  transform: scale(0.92);
-  background: rgba(201,169,110,0.4);
-}
-
-/* Saat video play, overlay mengecil & transparan agar video terlihat */
-video:not([paused]) ~ .play-overlay,
-.play-overlay.playing {
-  background: transparent;
-}
-
-/* Pastikan video-wrap & bts-video-wrap punya position:relative untuk overlay */
-#video-wrap,
-#bts-video-wrap {
-  position: relative;
-}
-
-/* COUNTDOWN RING — smooth hide saat Happy Birthday muncul */
-.countdown-ring {
-  transition: opacity 0.4s ease;
-}
-
-/* SCENE 6 — Scroll fix (konten bisa melebihi layar) */
-#scene-6 .scene-scroll {
-  justify-content: flex-start;
-  padding-top: 60px;
-}
-
-/* Hapus CSS custom play overlay (tidak dipakai lagi) */
-.play-overlay,
-.custom-play-btn {
-  display: none !important;
 }
